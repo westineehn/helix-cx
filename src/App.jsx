@@ -237,7 +237,7 @@ Return ONLY valid JSON matching this exact schema. No preamble. No markdown fenc
 Be specific. Reference actual numbers and named signals. Avoid generic CS platitudes like "schedule a check-in" or "build relationship." Every recommendation should be defensible to a CRO.`;
 
     try {
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
+      const response = await fetch('/api/analyze', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
