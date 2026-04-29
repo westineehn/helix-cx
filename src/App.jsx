@@ -727,28 +727,43 @@ Return ONLY valid JSON, no preamble, no markdown fences:
 
                 {reasoningOpen&&phase1Ready&&analysis.signalScores&&(
                   <div className="border border-zinc-800 rounded overflow-hidden bg-zinc-900/20">
-                    {/* Header */}
-                    <div className="px-6 py-4 border-b border-zinc-800">
+                    {/* Score reasoning — clearly labeled */}
+                    <div className="px-6 py-5 border-b border-zinc-800 bg-zinc-900/30">
+                      <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-2">Score Reasoning</p>
                       <p className="text-sm text-zinc-300 leading-relaxed">{analysis.scoreReasoning}</p>
                     </div>
 
                     {/* Signal breakdown table */}
                     <div className="px-6 py-4 border-b border-zinc-800">
-                      <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-3">Signal Breakdown</p>
-                      <div className="space-y-3">
+                      <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-4">Signal Breakdown</p>
+                      <div className="space-y-4">
                         {Object.entries(analysis.signalScores).map(([key, s]) => {
                           const contribution = ((s.score * s.weight) / 100).toFixed(1);
                           const barColor = s.score >= 75 ? 'bg-emerald-400' : s.score >= 50 ? 'bg-amber-400' : 'bg-rose-400';
+                          const labelMap = {
+                            productAdoption: 'Product Adoption',
+                            execSponsor: 'Exec Sponsor',
+                            engagementCadence: 'Engagement',
+                            expansionHistory: 'Expansion',
+                            champion: 'Champion',
+                            renewalOutlook: 'Renewal',
+                            external: 'External',
+                            usage: 'Usage',
+                            engagement: 'Engagement',
+                            commercial: 'Commercial',
+                            relationship: 'Relationship',
+                          };
+                          const label = labelMap[key] || key;
                           return (
                             <div key={key}>
-                              <div className="flex items-center justify-between mb-1">
-                                <div className="flex items-center gap-3">
-                                  <span className="text-[11px] uppercase tracking-widest text-zinc-500 w-24">{key}</span>
-                                  <span className="text-xs text-zinc-400">{s.note}</span>
+                              <div className="flex items-start justify-between mb-1.5 gap-4">
+                                <div className="flex items-start gap-3 min-w-0">
+                                  <span className="text-[11px] uppercase tracking-widest text-zinc-500 flex-shrink-0 w-28">{label}</span>
+                                  <span className="text-xs text-zinc-400 leading-relaxed">{s.note}</span>
                                 </div>
-                                <div className="flex items-center gap-3" style={{fontFamily:'JetBrains Mono, monospace'}}>
-                                  <span className="text-[11px] text-zinc-600">{s.weight}% wt</span>
-                                  <span className={`text-sm font-medium ${s.score>=75?'text-emerald-400':s.score>=50?'text-amber-400':'text-rose-400'}`}>{s.score}</span>
+                                <div className="flex items-center gap-3 flex-shrink-0" style={{fontFamily:'JetBrains Mono, monospace'}}>
+                                  <span className="text-[11px] text-zinc-600">{s.weight}%</span>
+                                  <span className={`text-sm font-medium w-8 text-right ${s.score>=75?'text-emerald-400':s.score>=50?'text-amber-400':'text-rose-400'}`}>{s.score}</span>
                                   <span className="text-[11px] text-zinc-500 w-10 text-right">+{contribution}</span>
                                 </div>
                               </div>
@@ -759,7 +774,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
                           );
                         })}
                       </div>
-                      <div className="flex items-center justify-between mt-4 pt-3 border-t border-zinc-800">
+                      <div className="flex items-center justify-between mt-5 pt-3 border-t border-zinc-800">
                         <span className="text-[11px] uppercase tracking-widest text-zinc-500">Weighted Total</span>
                         <span className="text-lg font-light text-amber-400" style={{fontFamily:'JetBrains Mono, monospace'}}>
                           {Object.values(analysis.signalScores).reduce((sum,s)=>sum+((s.score*s.weight)/100),0).toFixed(1)} → {analysis.healthScore}
@@ -767,32 +782,30 @@ Return ONLY valid JSON, no preamble, no markdown fences:
                       </div>
                     </div>
 
-                    {/* Category logic */}
-                    {analysis.categoryScores&&(
-                      <div className="px-6 py-4">
-                        <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-3">Category Logic</p>
-                        <div className="grid grid-cols-2 gap-3 mb-3">
-                          <div className="p-3 bg-zinc-900/60 rounded border border-zinc-800">
-                            <div className="flex items-center justify-between mb-1">
-                              <span className="text-[10px] uppercase tracking-widest text-rose-400/70">At Risk Score</span>
-                              <span className="text-sm text-rose-400" style={{fontFamily:'JetBrains Mono, monospace'}}>{analysis.categoryScores.atRiskScore}</span>
-                            </div>
-                            <p className="text-[10px] text-zinc-600">threshold ≥5 → At Risk</p>
-                          </div>
-                          <div className="p-3 bg-zinc-900/60 rounded border border-zinc-800">
-                            <div className="flex items-center justify-between mb-1">
-                              <span className="text-[10px] uppercase tracking-widest text-emerald-400/70">Expansion Score</span>
-                              <span className="text-sm text-emerald-400" style={{fontFamily:'JetBrains Mono, monospace'}}>{analysis.categoryScores.expansionScore}</span>
-                            </div>
-                            <p className="text-[10px] text-zinc-600">threshold ≥6 → Expansion Opp</p>
-                          </div>
+                    {/* Category assignment — readable explanation */}
+                    <div className="px-6 py-4 bg-zinc-900/10">
+                      <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-3">Category Assignment</p>
+                      <div className="flex items-start gap-3">
+                        <span className={`text-[9px] uppercase tracking-widest px-1.5 py-1 rounded border flex-shrink-0 ${CAT_META[cat].badgeClass}`}>{CAT_META[cat].label} · {sub}</span>
+                        <p className="text-xs text-zinc-400 leading-relaxed">
+                          {analysis.categoryScores?.categoryRationale || (() => {
+                            if (cat === 'at-risk') return 'Risk signals across multiple dimensions outweigh positive factors — account flagged for immediate attention.';
+                            if (cat === 'expansion') return 'Strong utilization, expansion history, and active signals indicate growth opportunity this quarter.';
+                            return 'Account is tracking within healthy parameters across all signal categories.';
+                          })()}
+                        </p>
+                      </div>
+                      <div className="mt-3 pt-3 border-t border-zinc-900 grid grid-cols-2 gap-3">
+                        <div>
+                          <p className="text-[10px] uppercase tracking-widest text-zinc-700 mb-1">Health Score</p>
+                          <p className="text-xs text-zinc-500">Weighted average of all 7 signal scores (0–100 each), multiplied by their respective weights</p>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <span className={`text-[9px] uppercase tracking-widest px-1.5 py-0.5 rounded border ${CAT_META[cat].badgeClass}`}>{CAT_META[cat].label} · {sub}</span>
-                          <span className="text-xs text-zinc-500">{analysis.categoryScores.categoryRationale}</span>
+                        <div>
+                          <p className="text-[10px] uppercase tracking-widest text-zinc-700 mb-1">Category</p>
+                          <p className="text-xs text-zinc-500">Determined separately from health score — evaluates risk and expansion signal patterns across all account dimensions</p>
                         </div>
                       </div>
-                    )}
+                    </div>
                   </div>
                 )}
 
