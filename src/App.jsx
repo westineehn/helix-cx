@@ -594,7 +594,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
   "tldr": "<1 sentence: company name + urgent signal + implication>",
   "scoreReasoning": "<2 sentences max, cite specific numbers>",
   "nextAction": {
-    "headline": "<verb-first, max 10 words>",
+    "headline": "<verb-first, max 14 words>",
     "rationale": "<1 sentence, cite data>",
     "owner": "CSM|Exec Sponsor|AE|CS Ops",
     "timeline": "<this week|next 2 weeks|this month>"
@@ -633,8 +633,8 @@ Return ONLY valid JSON, no preamble, no markdown fences:
   "expansionSignals": [
     {"strength": "strong|moderate|weak", "title": "<5 words max>", "detail": "<max 15 words, cite data>"}
   ],
-  "qbrTalkingPoints": ["<max 15 words>", "<max 15 words>", "<max 15 words>"],
-  "coachScript": "<2 sentences max, conversational, account-specific, not a sales pitch>"
+  "qbrTalkingPoints": ["<specific, max 20 words>", "<specific, max 20 words>", "<specific, max 20 words>"],
+  "coachScript": "<3 sentences max, conversational, human, account-specific. Not a sales pitch.>"
 }`;
 
       const p2 = await callApi([{ role: 'user', content: prompt2 }]);
