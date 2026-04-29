@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { TrendingUp, AlertTriangle, Sparkles, ChevronDown, ChevronRight, MessageSquare, Target, Activity, Users, DollarSign, Calendar, Zap, Loader2, Linkedin, Github, Plus, X, Pencil, Clock, AlertCircle, Lock, RefreshCw, ExternalLink } from "lucide-react";
 
-const STORAGE_ACCOUNTS = 'helix-accounts-v3';
-const STORAGE_ANALYSIS  = 'helix-analysis-v3';
-const STORAGE_NEWS      = 'helix-news-v3';
+const STORAGE_ACCOUNTS = 'helix-accounts-v4';
+const STORAGE_ANALYSIS  = 'helix-analysis-v4';
+const STORAGE_NEWS      = 'helix-news-v4';
 
 // ── Real company accounts ───────────────────────────────────────
 const DEFAULT_ACCOUNTS = [
@@ -86,11 +86,11 @@ const DEFAULT_ACCOUNTS = [
     tenureMonths: 28,
     usage: { utilization: 55, change30d: -6, trend: "down" },
     support: { tickets30d: 8, severity: "medium", sentiment: "mixed", csat: 3.7 },
-    engagement: { lastQbr: "2026-02-10", execSponsorStatus: "active", lastTouchDays: 18, qbrAttendance: "consistent" },
+    engagement: { lastQbr: "2026-02-10", execSponsorStatus: "transitioning", lastTouchDays: 28, qbrAttendance: "inconsistent — internal restructuring" },
     expansion: { historyArr: 70000, historyNote: "+$70K in late 2025", signals: "Paused — pending outcome of Win Now restructuring" },
     relationship: { championStable: true, recentChanges: "Champion stable but operating under significant internal pressure from Win Now transformation mandate." },
     external: "Second round of layoffs in 2026 — 1,400 roles cut April 2026. DTC revenue fell 4% while wholesale grew 5%. Win Now restructuring program targeting margin recovery.",
-    renewal: { probability: "medium", contractType: "annual", autoRenew: false, competitiveExposure: "rumored", updatedAt: "2026-04-28" }
+    renewal: { probability: "at-risk", contractType: "annual", autoRenew: false, competitiveExposure: "rumored", updatedAt: "2026-04-29" }
   },
   {
     id: 6,
@@ -131,9 +131,13 @@ const getCategory = (a) => {
   const u=a.usage.utilization, chg=a.usage.change30d, touch=a.engagement.lastTouchDays;
   const sev=a.support.severity, ch=a.relationship.championStable, sp=a.engagement.execSponsorStatus;
   const expArr=Number(a.expansion.historyArr)||0, expSig=a.expansion.signals;
+  const renewalProb=a.renewal?.probability||'medium';
+  const compExposure=a.renewal?.competitiveExposure||'none';
   const atRisk =
     (u<50?3:u<65?1:0)+(chg<-15?3:chg<-5?1:0)+(sev==='high'?3:sev==='medium'?1:0)+
-    (touch>45?3:touch>25?1:0)+(!ch?2:0)+(sp==='disengaged'||sp==='going dark'?2:0);
+    (touch>45?3:touch>25?1:0)+(!ch?2:0)+(sp==='disengaged'||sp==='going dark'?2:0)+
+    (renewalProb==='at-risk'?2:renewalProb==='medium'?1:0)+
+    (compExposure==='active-eval'?2:compExposure==='rumored'?1:0);
   const expansion =
     (expArr>300000?3:expArr>150000?2:expArr>0?1:0)+
     (expSig&&expSig!=='None'&&!expSig.startsWith('None active')?2:0)+
@@ -301,7 +305,7 @@ const QuickHealth = ({account,isSelected,onClick}) => {
         <div className={`w-8 h-8 rounded flex items-center justify-center text-xs font-medium flex-shrink-0 ${isSelected?'bg-amber-400/10 text-amber-400 border border-amber-400/30':'bg-zinc-800 text-zinc-400'}`} style={{fontFamily:'JetBrains Mono, monospace'}}>{account.logo||account.name.slice(0,2).toUpperCase()}</div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 mb-0.5"><span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${meta.dotClass}`}></span><p className="text-sm text-zinc-100 truncate">{account.name}</p></div>
-          <div className="flex items-center gap-1.5"><span className={`text-[9px] font-medium ${SUB_COLOR[sub][cat]}`}>{sub}</span><span className="text-zinc-700 text-[9px]">·</span><span className="text-[11px] text-zinc-600" style={{fontFamily:'JetBrains Mono, monospace'}}>{fmtC(account.arr)}</span></div>
+          <div className="flex items-center gap-1.5"><span className={`text-[9px] font-medium ${SUB_COLOR[sub][cat]}`}>{sub}</span><span className="text-zinc-700 text-[9px]">·</span><span className="text-[11px] text-zinc-400" style={{fontFamily:'JetBrains Mono, monospace'}}>{fmtC(account.arr)}</span></div>
         </div>
       </div>
     </button>
@@ -313,9 +317,9 @@ const SignalCard = ({icon:Icon,label,value,sublabel,accent='zinc'}) => {
   const accents={zinc:'text-zinc-300',emerald:'text-emerald-400',amber:'text-amber-400',rose:'text-rose-400'};
   return (
     <div className="p-4 bg-zinc-900/40 border border-zinc-800 rounded">
-      <div className="flex items-center gap-2 text-zinc-500 mb-2"><Icon className="w-3.5 h-3.5"/><span className="text-[10px] uppercase tracking-widest">{label}</span></div>
+      <div className="flex items-center gap-2 text-zinc-400 mb-2"><Icon className="w-3.5 h-3.5"/><span className="text-[10px] uppercase tracking-widest">{label}</span></div>
       <p className={`text-sm ${accents[accent]}`} style={{fontFamily:'JetBrains Mono, monospace'}}>{value}</p>
-      {sublabel&&<p className="text-[11px] text-zinc-500 mt-1">{sublabel}</p>}
+      {sublabel&&<p className="text-[11px] text-zinc-400 mt-1">{sublabel}</p>}
     </div>
   );
 };
@@ -530,7 +534,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
           <span className="text-[11px] uppercase tracking-widest text-zinc-600">Enterprise Health Engine</span>
         </div>
         <div className="flex items-center gap-4 text-xs text-zinc-500">
-          <span>Built by Westin Eehn</span>
+          <span className="text-zinc-400">Built by Westin Eehn</span>
           <a href="https://linkedin.com/in/westineehn" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-amber-400 transition-colors"><Linkedin className="w-3.5 h-3.5"/> LinkedIn</a>
           <a href="https://github.com/westineehn/helix-cx" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-amber-400 transition-colors"><Github className="w-3.5 h-3.5"/> Source</a>
         </div>
@@ -541,7 +545,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
         {/* Sidebar */}
         <aside className="col-span-3 border-r border-zinc-900 flex flex-col">
           <div className="px-4 py-4 border-b border-zinc-900 flex items-center justify-between">
-            <div><p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-1">Portfolio</p><p className="text-sm text-zinc-300" style={{fontFamily:'JetBrains Mono, monospace'}}>{accounts.length} accounts · {fmtTotal(totalArr)} ARR</p></div>
+            <div><p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-1">Portfolio</p><p className="text-sm text-zinc-200" style={{fontFamily:'JetBrains Mono, monospace'}}>{accounts.length} accounts · {fmtTotal(totalArr)} ARR</p></div>
             {editMode&&<button onClick={()=>setShowAddModal(true)} className="flex items-center gap-1 px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-amber-400 rounded text-[11px] transition-colors"><Plus className="w-3 h-3"/> Add</button>}
           </div>
           <div className="overflow-y-auto flex-1 py-1">
@@ -549,7 +553,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
               const all=Object.values(grouped[c]).flat();
               if(!all.length) return null;
               return (<div key={c}>
-                <div className="px-4 py-2 flex items-center gap-2 border-b border-zinc-900/60"><span className={`text-[10px] uppercase tracking-widest font-medium ${CAT_META[c].headerClass}`}>{CAT_META[c].label}</span><span className="text-[10px] text-zinc-600">{all.length}</span></div>
+                <div className="px-4 py-2 flex items-center gap-2 border-b border-zinc-900/60"><span className={`text-[10px] uppercase tracking-widest font-medium ${CAT_META[c].headerClass}`}>{CAT_META[c].label}</span><span className="text-[10px] text-zinc-500">{all.length}</span></div>
                 {['P1','P2','P3'].map(p=>grouped[c][p]?.map(a=>(<QuickHealth key={a.id} account={a} isSelected={a.id===selectedId} onClick={()=>setSelectedId(a.id)}/>)))}
               </div>);
             })}
@@ -568,7 +572,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
                   <CatBadge cat={cat} sub={sub}/>
                 </div>
                 <div className="flex items-center gap-3">
-                  <h2 className="text-4xl text-zinc-100" style={{fontFamily:'Instrument Serif, serif',letterSpacing:'-0.02em'}}>{account.name}</h2>
+                  <h2 className="text-4xl text-zinc-100" style={{fontFamily:'Instrument Serif, serif',letterSpacing:'-0.02em',fontWeight:700}}>{account.name}</h2>
                   {editMode&&<button onClick={()=>setEditingAccount(account)} className="text-zinc-600 hover:text-amber-400 transition-colors mt-1"><Pencil className="w-3.5 h-3.5"/></button>}
                 </div>
                 <div className="flex items-center gap-4 text-xs text-zinc-500 mt-2 mb-3" style={{fontFamily:'JetBrains Mono, monospace'}}>
@@ -619,12 +623,12 @@ Return ONLY valid JSON, no preamble, no markdown fences:
                     </div>
                   );
                 })()}
-                <p className="text-sm text-zinc-400 leading-relaxed border-l-2 border-zinc-800 pl-3 mb-3">{tldr}</p>
+                <p className="text-sm text-zinc-300 leading-relaxed border-l-2 border-zinc-700 pl-3 mb-3">{tldr}</p>
                 {isStale&&<div className="flex items-center gap-2 text-xs text-amber-400/70 mb-3"><AlertCircle className="w-3.5 h-3.5"/><span>Analysis is {staleHours}h old — consider re-running.</span></div>}
                 {analysis?.immediateActions&&(
                   <div className="border border-zinc-800/60 rounded p-3 bg-zinc-900/20">
                     <div className="flex items-center gap-2 mb-2"><Clock className="w-3 h-3 text-zinc-600"/><span className="text-[10px] uppercase tracking-widest text-zinc-600">Action Items · {fmtDate(analysis.analyzedAt)}</span></div>
-                    <ul className="space-y-1">{analysis.immediateActions.map((item,i)=>(<li key={i} className="flex gap-2 text-xs text-zinc-400"><span className="text-amber-400/50 mt-0.5 flex-shrink-0">→</span><span>{item}</span></li>))}</ul>
+                    <ul className="space-y-1">{analysis.immediateActions.map((item,i)=>(<li key={i} className="flex gap-2 text-xs text-zinc-400"><span className="text-amber-400/50 mt-0.5 flex-shrink-0">→</span><span className="text-zinc-300">{item}</span></li>))}</ul>
                   </div>
                 )}
               </div>
@@ -720,7 +724,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
                     <div className="col-span-8 border border-amber-400/30 rounded p-6 bg-amber-400/5">
                       <div className="flex items-center gap-2 mb-3"><Target className="w-4 h-4 text-amber-400"/><span className="text-[11px] uppercase tracking-widest text-amber-400">Next Best Action</span><span className="ml-auto text-[10px] uppercase tracking-widest text-zinc-500" style={{fontFamily:'JetBrains Mono, monospace'}}>{analysis.nextAction.owner} · {analysis.nextAction.timeline}</span></div>
                       <h3 className="text-xl text-zinc-100 mb-3" style={{fontFamily:'Instrument Serif, serif'}}>{analysis.nextAction.headline}</h3>
-                      <p className="text-sm text-zinc-400 leading-relaxed">{analysis.nextAction.rationale}</p>
+                      <p className="text-sm text-zinc-300 leading-relaxed">{analysis.nextAction.rationale}</p>
                     </div>
                   )}
                 </div>
@@ -730,7 +734,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
                     {/* Score reasoning — clearly labeled */}
                     <div className="px-6 py-5 border-b border-zinc-800 bg-zinc-900/30">
                       <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-2">Score Reasoning</p>
-                      <p className="text-sm text-zinc-300 leading-relaxed">{analysis.scoreReasoning}</p>
+                      <p className="text-sm text-zinc-200 leading-relaxed">{analysis.scoreReasoning}</p>
                     </div>
 
                     {/* Signal breakdown table */}
@@ -759,7 +763,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
                               <div className="flex items-start justify-between mb-1.5 gap-4">
                                 <div className="flex items-start gap-3 min-w-0">
                                   <span className="text-[11px] uppercase tracking-widest text-zinc-500 flex-shrink-0 w-28">{label}</span>
-                                  <span className="text-xs text-zinc-400 leading-relaxed">{s.note}</span>
+                                  <span className="text-xs text-zinc-300 leading-relaxed">{s.note}</span>
                                 </div>
                                 <div className="flex items-center gap-3 flex-shrink-0" style={{fontFamily:'JetBrains Mono, monospace'}}>
                                   <span className="text-[11px] text-zinc-600">{s.weight}%</span>
@@ -775,7 +779,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
                         })}
                       </div>
                       <div className="flex items-center justify-between mt-5 pt-3 border-t border-zinc-800">
-                        <span className="text-[11px] uppercase tracking-widest text-zinc-500">Weighted Total</span>
+                        <span className="text-[11px] uppercase tracking-widest text-zinc-400">Weighted Total</span>
                         <span className="text-lg font-light text-amber-400" style={{fontFamily:'JetBrains Mono, monospace'}}>
                           {Object.values(analysis.signalScores).reduce((sum,s)=>sum+((s.score*s.weight)/100),0).toFixed(1)} → {analysis.healthScore}
                         </span>
@@ -830,7 +834,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
                     </div>
                     <div className="p-6">
                       {!coachMode?(
-                        <ol className="space-y-3">{analysis.qbrTalkingPoints?.map((p,i)=>(<li key={i} className="flex gap-4 text-sm text-zinc-300"><span className="text-amber-400/60" style={{fontFamily:'JetBrains Mono, monospace'}}>0{i+1}</span><span className="leading-relaxed">{p}</span></li>))}</ol>
+                        <ol className="space-y-3">{analysis.qbrTalkingPoints?.map((p,i)=>(<li key={i} className="flex gap-4 text-sm text-zinc-300"><span className="text-amber-400/80" style={{fontFamily:'JetBrains Mono, monospace'}}>0{i+1}</span><span className="leading-relaxed">{p}</span></li>))}</ol>
                       ):(
                         <blockquote className="text-base text-zinc-300 leading-relaxed italic border-l-2 border-amber-400/40 pl-5" style={{fontFamily:'Instrument Serif, serif'}}>"{analysis.coachScript}"</blockquote>
                       )}
@@ -842,7 +846,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
           </>)}
 
           <footer className="mt-12 pt-6 border-t border-zinc-900 flex items-center justify-between text-[11px] text-zinc-600">
-            <span>Powered by Claude · Live news via Serper · {new Date().getFullYear()}</span>
+            <span className="text-zinc-500">Powered by Claude · Live news via Serper · {new Date().getFullYear()}</span>
             <button onClick={()=>editMode?setEditMode(false):setShowPasswordModal(true)} className={`transition-colors hover:text-zinc-400 ${editMode?'text-amber-400/60':'text-zinc-700'}`} style={{fontFamily:'JetBrains Mono, monospace'}} title={editMode?'Exit edit mode':'Edit mode'}>
               {editMode?'v0.6 · edit on':'v0.6'}
             </button>
