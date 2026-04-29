@@ -129,11 +129,11 @@ const getCategory = (a) => {
     (u<50?3:u<65?1:0)+(chg<-15?3:chg<-5?1:0)+(sev==='high'?3:sev==='medium'?1:0)+
     (touch>45?3:touch>25?1:0)+(!ch?2:0)+(sp==='disengaged'||sp==='going dark'?2:0);
   const expansion =
-    (expArr>200000?3:expArr>50000?2:expArr>0?1:0)+
-    (expSig&&expSig!=='None'&&expSig!=='None active'?2:0)+
-    (u>=80?2:u>=70?1:0)+(chg>15?2:chg>5?1:0);
+    (expArr>300000?3:expArr>150000?2:expArr>0?1:0)+
+    (expSig&&expSig!=='None'&&!expSig.startsWith('None active')?2:0)+
+    (u>=85?2:u>=75?1:0)+(chg>15?2:chg>8?1:0);
   if (atRisk>=5) return 'at-risk';
-  if (expansion>=4) return 'expansion';
+  if (expansion>=6) return 'expansion';
   return 'stable';
 };
 
@@ -418,7 +418,7 @@ export default function HealthScoreEngine() {
 
     const baseContext = `ACCOUNT DATA:\n${JSON.stringify({...account,external:undefined},null,2)}${newsContext}`;
 
-    const prompt1 = `You are a Senior CS strategist. Be terse — keep all string values under 20 words.
+    const prompt1 = `You are a Senior CS strategist. Be terse — keep all string values under 20 words. Evaluate ALL signal categories: usage, support, engagement, expansion history, relationship, AND external. Do not anchor on a single dimension.
 
 ${baseContext}
 
@@ -426,16 +426,16 @@ Return ONLY valid JSON, no preamble, no markdown fences:
 
 {
   "healthScore": <integer 0-100>,
-  "tldr": "<1 sentence: company name + urgent signal + implication>",
-  "scoreReasoning": "<2 sentences max, cite specific numbers>",
+  "tldr": "<1 sentence: company name + most urgent cross-signal finding + implication>",
+  "scoreReasoning": "<2 sentences max, cite signals from at least 2 different categories>",
   "nextAction": {
     "headline": "<verb-first, max 14 words>",
-    "rationale": "<1 sentence, cite data>",
+    "rationale": "<1 sentence, cite specific data from account>",
     "owner": "CSM|Exec Sponsor|AE|CS Ops",
     "timeline": "<this week|next 2 weeks|this month>"
   },
   "immediateActions": [
-    "<verb-first, max 12 words>",
+    "<verb-first, max 12 words — draw from different signal categories>",
     "<verb-first, max 12 words>",
     "<verb-first, max 12 words>"
   ]
@@ -447,7 +447,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
       setAnalysisMap(prev=>({...prev,[account.id]:{...(prev[account.id]||{}),...p1}}));
       setLoadingPhase('secondary');
 
-      const prompt2 = `You are a Senior CS strategist. Be terse — keep all string values under 20 words.
+      const prompt2 = `You are a Senior CS strategist. Be terse — keep all string values under 20 words. Risk flags and expansion signals MUST draw from all available data — usage trends, support load, engagement patterns, expansion history, relationship stability, AND external signals. Do not source everything from a single category.
 
 ${baseContext}
 
@@ -455,20 +455,21 @@ Return ONLY valid JSON, no preamble, no markdown fences:
 
 {
   "weightedFactors": [
-    {"factor": "Usage", "weight": "high|medium|low", "direction": "positive|negative|neutral", "note": "<max 12 words, cite a number>"},
-    {"factor": "Engagement", "weight": "high|medium|low", "direction": "positive|negative|neutral", "note": "<max 12 words, cite a number>"},
-    {"factor": "Commercial", "weight": "high|medium|low", "direction": "positive|negative|neutral", "note": "<max 12 words, cite a number>"},
-    {"factor": "Relationship", "weight": "high|medium|low", "direction": "positive|negative|neutral", "note": "<max 12 words>"},
-    {"factor": "External", "weight": "high|medium|low", "direction": "positive|negative|neutral", "note": "<max 12 words>"}
+    {"factor": "Usage", "weight": "high|medium|low", "direction": "positive|negative|neutral", "note": "<max 12 words, cite the actual utilization number or trend>"},
+    {"factor": "Engagement", "weight": "high|medium|low", "direction": "positive|negative|neutral", "note": "<max 12 words, cite last touch days or QBR attendance>"},
+    {"factor": "Commercial", "weight": "high|medium|low", "direction": "positive|negative|neutral", "note": "<max 12 words, cite ARR or expansion history>"},
+    {"factor": "Relationship", "weight": "high|medium|low", "direction": "positive|negative|neutral", "note": "<max 12 words, cite champion status or recent changes>"},
+    {"factor": "External", "weight": "high|medium|low", "direction": "positive|negative|neutral", "note": "<max 12 words, cite a specific market signal>"}
   ],
   "riskFlags": [
-    {"severity": "high|medium|low", "title": "<5 words max>", "detail": "<max 15 words, cite data>"}
+    {"severity": "high|medium|low", "title": "<5 words max>", "detail": "<max 15 words — source from usage, engagement, relationship, or commercial — not just external>"},
+    {"severity": "high|medium|low", "title": "<5 words max>", "detail": "<max 15 words — different signal category than above>"}
   ],
   "expansionSignals": [
-    {"strength": "strong|moderate|weak", "title": "<5 words max>", "detail": "<max 15 words, cite data>"}
+    {"strength": "strong|moderate|weak", "title": "<5 words max>", "detail": "<max 15 words, cite specific data point>"}
   ],
-  "qbrTalkingPoints": ["<specific, max 20 words>", "<specific, max 20 words>", "<specific, max 20 words>"],
-  "coachScript": "<3 sentences max, conversational, human, account-specific. Not a sales pitch.>"
+  "qbrTalkingPoints": ["<specific, max 20 words, reference account data>", "<specific, max 20 words, different signal category>", "<specific, max 20 words>"],
+  "coachScript": "<3 sentences max, conversational, human, account-specific. Reference something concrete from usage or relationship data. Not a sales pitch.>"
 }`;
 
       const p2 = await callAnalyze([{role:'user',content:prompt2}]);
