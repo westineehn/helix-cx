@@ -428,6 +428,18 @@ Return ONLY valid JSON, no preamble, no markdown fences:
   "healthScore": <integer 0-100>,
   "tldr": "<1 sentence: company name + most urgent cross-signal finding + implication>",
   "scoreReasoning": "<2 sentences max, cite signals from at least 2 different categories>",
+  "signalScores": {
+    "usage":        { "score": <0-100>, "weight": 25, "note": "<max 10 words citing utilization or trend>" },
+    "engagement":   { "score": <0-100>, "weight": 20, "note": "<max 10 words citing touch days or QBR>" },
+    "commercial":   { "score": <0-100>, "weight": 20, "note": "<max 10 words citing ARR or expansion>" },
+    "relationship": { "score": <0-100>, "weight": 20, "note": "<max 10 words citing champion or stakeholder>" },
+    "external":     { "score": <0-100>, "weight": 15, "note": "<max 10 words citing a market signal>" }
+  },
+  "categoryScores": {
+    "atRiskScore": <integer — weighted sum of risk signals, higher = more at risk>,
+    "expansionScore": <integer — weighted sum of expansion signals, higher = more opportunity>,
+    "categoryRationale": "<1 sentence explaining the category assignment>"
+  },
   "nextAction": {
     "headline": "<verb-first, max 14 words>",
     "rationale": "<1 sentence, cite specific data from account>",
@@ -628,7 +640,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
                     {loadingPhase==='primary'?<div className="flex flex-col items-center gap-3"><Loader2 className="w-8 h-8 animate-spin text-zinc-700"/><p className="text-xs text-zinc-600">Scoring…</p></div>:<>
                       <HealthRing score={analysis.healthScore}/>
                       <button onClick={()=>setReasoningOpen(!reasoningOpen)} className="mt-4 text-[11px] uppercase tracking-widest text-zinc-500 hover:text-amber-400 flex items-center gap-1 transition-colors">
-                        {reasoningOpen?<ChevronDown className="w-3 h-3"/>:<ChevronRight className="w-3 h-3"/>} Why this score?
+                        {reasoningOpen?<ChevronDown className="w-3 h-3"/>:<ChevronRight className="w-3 h-3"/>} Score Breakdown
                       </button>
                     </>}
                   </div>
@@ -641,17 +653,73 @@ Return ONLY valid JSON, no preamble, no markdown fences:
                   )}
                 </div>
 
-                {reasoningOpen&&phase1Ready&&(
-                  <div className="border border-zinc-800 rounded p-6 bg-zinc-900/30">
-                    <p className="text-sm text-zinc-300 leading-relaxed mb-4">{analysis.scoreReasoning}</p>
-                    {phase2Ready&&analysis.weightedFactors&&(
-                      <div className="space-y-2">{analysis.weightedFactors.map((f,i)=>(
-                        <div key={i} className="flex items-start gap-3 py-2 border-b border-zinc-900 last:border-0">
-                          <span className="text-[11px] uppercase tracking-widest text-zinc-500 w-24 mt-0.5">{f.factor}</span>
-                          <span className={`text-[10px] uppercase tracking-widest px-1.5 py-0.5 rounded mt-0.5 ${f.direction==='positive'?'bg-emerald-500/10 text-emerald-400':f.direction==='negative'?'bg-rose-500/10 text-rose-400':'bg-zinc-800 text-zinc-500'}`}>{f.weight}</span>
-                          <span className="text-sm text-zinc-400 flex-1">{f.note}</span>
+                {reasoningOpen&&phase1Ready&&analysis.signalScores&&(
+                  <div className="border border-zinc-800 rounded overflow-hidden bg-zinc-900/20">
+                    {/* Header */}
+                    <div className="px-6 py-4 border-b border-zinc-800">
+                      <p className="text-sm text-zinc-300 leading-relaxed">{analysis.scoreReasoning}</p>
+                    </div>
+
+                    {/* Signal breakdown table */}
+                    <div className="px-6 py-4 border-b border-zinc-800">
+                      <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-3">Signal Breakdown</p>
+                      <div className="space-y-3">
+                        {Object.entries(analysis.signalScores).map(([key, s]) => {
+                          const contribution = ((s.score * s.weight) / 100).toFixed(1);
+                          const barColor = s.score >= 75 ? 'bg-emerald-400' : s.score >= 50 ? 'bg-amber-400' : 'bg-rose-400';
+                          return (
+                            <div key={key}>
+                              <div className="flex items-center justify-between mb-1">
+                                <div className="flex items-center gap-3">
+                                  <span className="text-[11px] uppercase tracking-widest text-zinc-500 w-24">{key}</span>
+                                  <span className="text-xs text-zinc-400">{s.note}</span>
+                                </div>
+                                <div className="flex items-center gap-3" style={{fontFamily:'JetBrains Mono, monospace'}}>
+                                  <span className="text-[11px] text-zinc-600">{s.weight}% wt</span>
+                                  <span className={`text-sm font-medium ${s.score>=75?'text-emerald-400':s.score>=50?'text-amber-400':'text-rose-400'}`}>{s.score}</span>
+                                  <span className="text-[11px] text-zinc-500 w-10 text-right">+{contribution}</span>
+                                </div>
+                              </div>
+                              <div className="h-1 bg-zinc-800 rounded-full overflow-hidden">
+                                <div className={`h-full rounded-full transition-all duration-700 ${barColor}`} style={{width:`${s.score}%`}}/>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div className="flex items-center justify-between mt-4 pt-3 border-t border-zinc-800">
+                        <span className="text-[11px] uppercase tracking-widest text-zinc-500">Weighted Total</span>
+                        <span className="text-lg font-light text-amber-400" style={{fontFamily:'JetBrains Mono, monospace'}}>
+                          {Object.values(analysis.signalScores).reduce((sum,s)=>sum+((s.score*s.weight)/100),0).toFixed(1)} → {analysis.healthScore}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Category logic */}
+                    {analysis.categoryScores&&(
+                      <div className="px-6 py-4">
+                        <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-3">Category Logic</p>
+                        <div className="grid grid-cols-2 gap-3 mb-3">
+                          <div className="p-3 bg-zinc-900/60 rounded border border-zinc-800">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-[10px] uppercase tracking-widest text-rose-400/70">At Risk Score</span>
+                              <span className="text-sm text-rose-400" style={{fontFamily:'JetBrains Mono, monospace'}}>{analysis.categoryScores.atRiskScore}</span>
+                            </div>
+                            <p className="text-[10px] text-zinc-600">threshold ≥5 → At Risk</p>
+                          </div>
+                          <div className="p-3 bg-zinc-900/60 rounded border border-zinc-800">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-[10px] uppercase tracking-widest text-emerald-400/70">Expansion Score</span>
+                              <span className="text-sm text-emerald-400" style={{fontFamily:'JetBrains Mono, monospace'}}>{analysis.categoryScores.expansionScore}</span>
+                            </div>
+                            <p className="text-[10px] text-zinc-600">threshold ≥6 → Expansion Opp</p>
+                          </div>
                         </div>
-                      ))}</div>
+                        <div className="flex items-center gap-2">
+                          <span className={`text-[9px] uppercase tracking-widest px-1.5 py-0.5 rounded border ${CAT_META[cat].badgeClass}`}>{CAT_META[cat].label} · {sub}</span>
+                          <span className="text-xs text-zinc-500">{analysis.categoryScores.categoryRationale}</span>
+                        </div>
+                      </div>
                     )}
                   </div>
                 )}
