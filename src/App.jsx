@@ -514,7 +514,7 @@ const callApi = async (messages) => {
   const res = await fetch('/api/analyze', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 1000, messages })
+    body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 2000, messages })
   });
   if (!res.ok) throw new Error(`API returned ${res.status}`);
   const data = await res.json();
@@ -583,7 +583,7 @@ export default function HealthScoreEngine() {
     const baseContext = `ACCOUNT DATA:\n${JSON.stringify(account, null, 2)}`;
 
     // ── Call 1: Fast — score + next action + immediate actions ──
-    const prompt1 = `You are a Senior Customer Success strategist with deep experience managing multi-million-dollar SaaS portfolios with technical buyers (CTOs, VPs Engineering).
+    const prompt1 = `You are a Senior CS strategist. Be terse — keep all string values under 20 words.
 
 ${baseContext}
 
@@ -591,18 +591,18 @@ Return ONLY valid JSON, no preamble, no markdown fences:
 
 {
   "healthScore": <integer 0-100>,
-  "tldr": "<1-2 sentences. Specific to this account — reference the company name, a key signal, and the most urgent implication. Not a template.>",
-  "scoreReasoning": "<2-3 sentences referencing specific signals>",
+  "tldr": "<1 sentence: company name + urgent signal + implication>",
+  "scoreReasoning": "<2 sentences max, cite specific numbers>",
   "nextAction": {
-    "headline": "<specific, time-bound action — verb first>",
-    "rationale": "<why this, why now — reference the data>",
+    "headline": "<verb-first, max 10 words>",
+    "rationale": "<1 sentence, cite data>",
     "owner": "CSM|Exec Sponsor|AE|CS Ops",
     "timeline": "<this week|next 2 weeks|this month>"
   },
   "immediateActions": [
-    "<verb-first action item 1 — one sentence, specific>",
-    "<verb-first action item 2>",
-    "<verb-first action item 3>"
+    "<verb-first, max 12 words>",
+    "<verb-first, max 12 words>",
+    "<verb-first, max 12 words>"
   ]
 }`;
 
@@ -613,7 +613,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
       setLoadingPhase('secondary');
 
       // ── Call 2: Depth — risk, expansion, QBR, coach ──────────
-      const prompt2 = `You are a Senior Customer Success strategist.
+      const prompt2 = `You are a Senior CS strategist. Be terse — keep all string values under 20 words.
 
 ${baseContext}
 
@@ -621,23 +621,21 @@ Return ONLY valid JSON, no preamble, no markdown fences:
 
 {
   "weightedFactors": [
-    {"factor": "Usage", "weight": "high|medium|low", "direction": "positive|negative|neutral", "note": "<specific observation>"},
-    {"factor": "Engagement", "weight": "high|medium|low", "direction": "positive|negative|neutral", "note": "<specific observation>"},
-    {"factor": "Commercial", "weight": "high|medium|low", "direction": "positive|negative|neutral", "note": "<specific observation>"},
-    {"factor": "Relationship", "weight": "high|medium|low", "direction": "positive|negative|neutral", "note": "<specific observation>"},
-    {"factor": "External", "weight": "high|medium|low", "direction": "positive|negative|neutral", "note": "<specific observation>"}
+    {"factor": "Usage", "weight": "high|medium|low", "direction": "positive|negative|neutral", "note": "<max 12 words, cite a number>"},
+    {"factor": "Engagement", "weight": "high|medium|low", "direction": "positive|negative|neutral", "note": "<max 12 words, cite a number>"},
+    {"factor": "Commercial", "weight": "high|medium|low", "direction": "positive|negative|neutral", "note": "<max 12 words, cite a number>"},
+    {"factor": "Relationship", "weight": "high|medium|low", "direction": "positive|negative|neutral", "note": "<max 12 words>"},
+    {"factor": "External", "weight": "high|medium|low", "direction": "positive|negative|neutral", "note": "<max 12 words>"}
   ],
   "riskFlags": [
-    {"severity": "high|medium|low", "title": "<short headline>", "detail": "<specific, references data>"}
+    {"severity": "high|medium|low", "title": "<5 words max>", "detail": "<max 15 words, cite data>"}
   ],
   "expansionSignals": [
-    {"strength": "strong|moderate|weak", "title": "<short headline>", "detail": "<specific, references data>"}
+    {"strength": "strong|moderate|weak", "title": "<5 words max>", "detail": "<max 15 words, cite data>"}
   ],
-  "qbrTalkingPoints": ["<specific point 1>", "<specific point 2>", "<specific point 3>"],
-  "coachScript": "<2-3 sentences a CSM could literally open their next call with. Conversational, human, account-specific. Not a sales pitch.>"
-}
-
-Be specific. Reference actual numbers. Every recommendation defensible to a CRO.`;
+  "qbrTalkingPoints": ["<max 15 words>", "<max 15 words>", "<max 15 words>"],
+  "coachScript": "<2 sentences max, conversational, account-specific, not a sales pitch>"
+}`;
 
       const p2 = await callApi([{ role: 'user', content: prompt2 }]);
       setAnalysisMap(prev => ({
