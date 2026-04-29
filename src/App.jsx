@@ -195,7 +195,7 @@ const getTldrFallback = (a) => {
 };
 
 // ── Shared primitives ───────────────────────────────────────────
-const Field = ({label,children}) => (<div><label className="block text-[10px] uppercase tracking-widest text-zinc-500 mb-1">{label}</label>{children}</div>);
+const Field = ({label,children}) => (<div><label className="block text-[10px] uppercase tracking-widest text-zinc-400 mb-1">{label}</label>{children}</div>);
 const Input = ({value,onChange,placeholder,type='text'}) => (<input type={type} value={value} onChange={onChange} placeholder={placeholder} className="w-full bg-zinc-900 border border-zinc-700 rounded px-3 py-2 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-amber-400/50"/>);
 const Sel = ({value,onChange,children}) => (<select value={value} onChange={onChange} className="w-full bg-zinc-900 border border-zinc-700 rounded px-3 py-2 text-sm text-zinc-100 focus:outline-none focus:border-amber-400/50">{children}</select>);
 
@@ -239,8 +239,8 @@ const AccountFormModal = ({initial,title,submitLabel,onSubmit,onClose}) => {
         <div className="p-6 space-y-5">
           {jsonMode&&!initial?(
             <div className="space-y-3">
-              <p className="text-xs text-zinc-500">Paste account data as JSON.</p>
-              <div className="p-3 bg-zinc-900/60 border border-zinc-800 rounded"><p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-2">Template</p><pre className="text-[11px] text-zinc-400 overflow-x-auto whitespace-pre-wrap">{JSON_TEMPLATE}</pre></div>
+              <p className="text-xs text-zinc-400">Paste account data as JSON.</p>
+              <div className="p-3 bg-zinc-900/60 border border-zinc-800 rounded"><p className="text-[10px] uppercase tracking-widest text-zinc-400 mb-2">Template</p><pre className="text-[11px] text-zinc-400 overflow-x-auto whitespace-pre-wrap">{JSON_TEMPLATE}</pre></div>
               <textarea value={jsonInput} onChange={e=>setJsonInput(e.target.value)} placeholder="Paste your JSON here..." rows={10} className="w-full bg-zinc-900 border border-zinc-700 rounded px-3 py-2 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-amber-400/50 font-mono"/>
               {jsonError&&<p className="text-xs text-rose-400">{jsonError}</p>}
               <button onClick={handleParse} className="px-4 py-2 bg-zinc-800 text-zinc-300 text-sm rounded hover:bg-zinc-700">Parse → Switch to Form</button>
@@ -290,7 +290,7 @@ const PasswordModal = ({onSuccess,onClose}) => {
         <div className="flex items-center gap-2 mb-5"><Lock className="w-4 h-4 text-amber-400"/><h2 className="text-base text-zinc-100" style={{fontFamily:'Instrument Serif, serif'}}>Edit Mode</h2></div>
         <input type="password" value={pw} onChange={e=>{setPw(e.target.value);setErr(false);}} onKeyDown={e=>e.key==='Enter'&&attempt()} placeholder="Password" className="w-full bg-zinc-900 border border-zinc-700 rounded px-3 py-2 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-amber-400/50 mb-2"/>
         {err&&<p className="text-xs text-rose-400 mb-3">Incorrect password.</p>}
-        <div className="flex gap-2 mt-3"><button onClick={onClose} className="flex-1 px-3 py-2 text-sm text-zinc-500 hover:text-zinc-300">Cancel</button><button onClick={attempt} className="flex-1 px-3 py-2 bg-amber-400 text-zinc-950 text-sm font-medium rounded hover:bg-amber-300">Unlock</button></div>
+        <div className="flex gap-2 mt-3"><button onClick={onClose} className="flex-1 px-3 py-2 text-sm text-zinc-400 hover:text-zinc-200">Cancel</button><button onClick={attempt} className="flex-1 px-3 py-2 bg-amber-400 text-zinc-950 text-sm font-medium rounded hover:bg-amber-300">Unlock</button></div>
       </div>
     </div>
   );
@@ -335,7 +335,7 @@ const HealthRing = ({score,size=120}) => {
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-3xl font-light" style={{fontFamily:'JetBrains Mono, monospace',color:col}}>{score}</span>
-        <span className="text-[10px] uppercase tracking-widest text-zinc-500 mt-0.5">Health</span>
+        <span className="text-[10px] uppercase tracking-widest text-zinc-400 mt-0.5">Health</span>
       </div>
     </div>
   );
@@ -531,9 +531,9 @@ Return ONLY valid JSON, no preamble, no markdown fences:
       <header className="border-b border-zinc-900 px-8 py-5 flex items-center justify-between">
         <div className="flex items-baseline gap-3">
           <h1 className="text-2xl text-amber-400" style={{fontFamily:'Instrument Serif, serif',letterSpacing:'-0.01em'}}>Helix<span className="italic text-zinc-500">.cs</span></h1>
-          <span className="text-[11px] uppercase tracking-widest text-zinc-600">Enterprise Health Engine</span>
+          <span className="text-[11px] uppercase tracking-widest text-zinc-400">Enterprise Health Engine</span>
         </div>
-        <div className="flex items-center gap-4 text-xs text-zinc-500">
+        <div className="flex items-center gap-4 text-xs text-zinc-400">
           <span className="text-zinc-400">Built by Westin Eehn</span>
           <a href="https://linkedin.com/in/westineehn" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-amber-400 transition-colors"><Linkedin className="w-3.5 h-3.5"/> LinkedIn</a>
           <a href="https://github.com/westineehn/helix-cx" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-amber-400 transition-colors"><Github className="w-3.5 h-3.5"/> Source</a>
@@ -545,7 +545,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
         {/* Sidebar */}
         <aside className="col-span-3 border-r border-zinc-900 flex flex-col">
           <div className="px-4 py-4 border-b border-zinc-900 flex items-center justify-between">
-            <div><p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-1">Portfolio</p><p className="text-sm text-zinc-200" style={{fontFamily:'JetBrains Mono, monospace'}}>{accounts.length} accounts · {fmtTotal(totalArr)} ARR</p></div>
+            <div><p className="text-[10px] uppercase tracking-widest text-zinc-400 mb-1">Portfolio</p><p className="text-sm text-zinc-200" style={{fontFamily:'JetBrains Mono, monospace'}}>{accounts.length} accounts · {fmtTotal(totalArr)} ARR</p></div>
             {editMode&&<button onClick={()=>setShowAddModal(true)} className="flex items-center gap-1 px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-amber-400 rounded text-[11px] transition-colors"><Plus className="w-3 h-3"/> Add</button>}
           </div>
           <div className="overflow-y-auto flex-1 py-1">
@@ -553,7 +553,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
               const all=Object.values(grouped[c]).flat();
               if(!all.length) return null;
               return (<div key={c}>
-                <div className="px-4 py-2 flex items-center gap-2 border-b border-zinc-900/60"><span className={`text-[10px] uppercase tracking-widest font-medium ${CAT_META[c].headerClass}`}>{CAT_META[c].label}</span><span className="text-[10px] text-zinc-500">{all.length}</span></div>
+                <div className="px-4 py-2 flex items-center gap-2 border-b border-zinc-900/60"><span className={`text-[10px] uppercase tracking-widest font-medium ${CAT_META[c].headerClass}`}>{CAT_META[c].label}</span><span className="text-[10px] text-zinc-400">{all.length}</span></div>
                 {['P1','P2','P3'].map(p=>grouped[c][p]?.map(a=>(<QuickHealth key={a.id} account={a} isSelected={a.id===selectedId} onClick={()=>setSelectedId(a.id)}/>)))}
               </div>);
             })}
@@ -568,14 +568,14 @@ Return ONLY valid JSON, no preamble, no markdown fences:
             <div className="flex items-start justify-between mb-6">
               <div className="flex-1 mr-6">
                 <div className="flex items-center gap-2 mb-2">
-                  <p className="text-[11px] uppercase tracking-widest text-zinc-500">{account.industry}</p>
+                  <p className="text-[11px] uppercase tracking-widest text-zinc-400">{account.industry}</p>
                   <CatBadge cat={cat} sub={sub}/>
                 </div>
                 <div className="flex items-center gap-3">
                   <h2 className="text-4xl text-zinc-100" style={{fontFamily:'Instrument Serif, serif',letterSpacing:'-0.02em',fontWeight:700}}>{account.name}</h2>
                   {editMode&&<button onClick={()=>setEditingAccount(account)} className="text-zinc-600 hover:text-amber-400 transition-colors mt-1"><Pencil className="w-3.5 h-3.5"/></button>}
                 </div>
-                <div className="flex items-center gap-4 text-xs text-zinc-500 mt-2 mb-3" style={{fontFamily:'JetBrains Mono, monospace'}}>
+                <div className="flex items-center gap-4 text-xs text-zinc-400 mt-2 mb-3" style={{fontFamily:'JetBrains Mono, monospace'}}>
                   <span>{fmtC(Number(account.arr))} ARR</span><span className="text-zinc-700">·</span>
                   <span>Renews {account.contractEnd}</span><span className="text-zinc-700">·</span>
                   <span>{account.tenureMonths}mo tenure</span>
@@ -590,25 +590,25 @@ Return ONLY valid JSON, no preamble, no markdown fences:
                   const expLabels = { none:'None detected', rumored:'Rumored', 'active-eval':'Active eval' };
                   const RField = ({label, value, valueClass='text-zinc-200'}) => (
                     <div>
-                      <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-1">{label}</p>
+                      <p className="text-[10px] uppercase tracking-widest text-zinc-400 mb-1">{label}</p>
                       <p className={`text-sm font-medium ${valueClass}`}>{value}</p>
                     </div>
                   );
                   return (
                     <div className="border border-zinc-800 rounded p-4 mb-4 bg-zinc-900/20">
                       <div className="flex items-center justify-between mb-4">
-                        <span className="text-[10px] uppercase tracking-widest text-zinc-600">Renewal Outlook</span>
-                        {r.updatedAt && <span className="text-[10px] text-zinc-700" style={{fontFamily:'JetBrains Mono, monospace'}}>Updated {r.updatedAt}</span>}
+                        <span className="text-[10px] uppercase tracking-widest text-zinc-400">Renewal Outlook</span>
+                        {r.updatedAt && <span className="text-[10px] text-zinc-400" style={{fontFamily:'JetBrains Mono, monospace'}}>Updated {r.updatedAt}</span>}
                       </div>
                       <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                         <div>
-                          <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-1.5">Probability</p>
+                          <p className="text-[10px] uppercase tracking-widest text-zinc-400 mb-1.5">Probability</p>
                           <span className={`text-[11px] uppercase tracking-widest px-2 py-1 rounded border font-medium ${probColors[prob]||probColors.medium}`}>
                             {probLabels[prob]||prob}
                           </span>
                         </div>
                         <div>
-                          <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-1.5">Competitive Exposure</p>
+                          <p className="text-[10px] uppercase tracking-widest text-zinc-400 mb-1.5">Competitive Exposure</p>
                           <span className={`text-sm font-medium ${expColors[r.competitiveExposure]||'text-zinc-300'}`}>
                             {expLabels[r.competitiveExposure]||'Unknown'}
                           </span>
@@ -627,7 +627,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
                 {isStale&&<div className="flex items-center gap-2 text-xs text-amber-400/70 mb-3"><AlertCircle className="w-3.5 h-3.5"/><span>Analysis is {staleHours}h old — consider re-running.</span></div>}
                 {analysis?.immediateActions&&(
                   <div className="border border-zinc-800/60 rounded p-3 bg-zinc-900/20">
-                    <div className="flex items-center gap-2 mb-2"><Clock className="w-3 h-3 text-zinc-600"/><span className="text-[10px] uppercase tracking-widest text-zinc-600">Action Items · {fmtDate(analysis.analyzedAt)}</span></div>
+                    <div className="flex items-center gap-2 mb-2"><Clock className="w-3 h-3 text-zinc-400"/><span className="text-[10px] uppercase tracking-widest text-zinc-400">Action Items · {fmtDate(analysis.analyzedAt)}</span></div>
                     <ul className="space-y-1">{analysis.immediateActions.map((item,i)=>(<li key={i} className="flex gap-2 text-xs text-zinc-400"><span className="text-amber-400/50 mt-0.5 flex-shrink-0">→</span><span className="text-zinc-300">{item}</span></li>))}</ul>
                   </div>
                 )}
@@ -663,7 +663,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
               {/* Live External Signal card */}
               <div className="p-4 bg-zinc-900/40 border border-zinc-800 rounded">
                 <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2 text-zinc-500">
+                  <div className="flex items-center gap-2 text-zinc-400">
                     <Zap className="w-3.5 h-3.5"/>
                     <span className="text-[10px] uppercase tracking-widest">External Signal</span>
                   </div>
@@ -675,12 +675,12 @@ Return ONLY valid JSON, no preamble, no markdown fences:
 
                 {!news&&!loadingNews&&(
                   <div>
-                    <p className="text-[11px] text-zinc-500 mb-2">{account.external}</p>
+                    <p className="text-[11px] text-zinc-400 mb-2">{account.external}</p>
                     <button onClick={fetchNews} className="text-[10px] text-amber-400/60 hover:text-amber-400 transition-colors">↻ Fetch live news</button>
                   </div>
                 )}
 
-                {loadingNews&&<div className="flex items-center gap-2 text-xs text-zinc-600"><Loader2 className="w-3 h-3 animate-spin"/>Fetching live news…</div>}
+                {loadingNews&&<div className="flex items-center gap-2 text-xs text-zinc-400"><Loader2 className="w-3 h-3 animate-spin"/>Fetching live news…</div>}
 
                 {news&&!loadingNews&&(<>
                   {newsStale&&<p className="text-[10px] text-amber-400/60 mb-1.5">⚠ Fetched {hoursAgo(news.fetchedAt)}h ago</p>}
@@ -689,7 +689,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
                     {news.articles.map((a,i)=>(
                       <a key={i} href={a.url} target="_blank" rel="noopener noreferrer" className="flex items-start gap-1.5 text-[10px] text-zinc-500 hover:text-amber-400 transition-colors group">
                         <ExternalLink className="w-2.5 h-2.5 mt-0.5 flex-shrink-0 group-hover:text-amber-400"/>
-                        <span className="truncate">{a.source} · {a.title}</span>
+                        <span className="truncate text-zinc-400">{a.source} · {a.title}</span>
                       </a>
                     ))}
                   </div>
@@ -704,8 +704,8 @@ Return ONLY valid JSON, no preamble, no markdown fences:
             {!analysis&&!loadingPhase&&!error&&(
               <div className="border border-dashed border-zinc-800 rounded p-10 text-center">
                 <Sparkles className="w-6 h-6 text-zinc-700 mx-auto mb-3"/>
-                <p className="text-sm text-zinc-500">Click <span className="text-amber-400">Analyze with AI</span> to generate health score, risk flags, and prescriptive next actions.</p>
-                {!news&&<p className="text-xs text-zinc-600 mt-2">Tip: fetch live news first for a more accurate analysis.</p>}
+                <p className="text-sm text-zinc-400">Click <span className="text-amber-400">Analyze with AI</span> to generate health score, risk flags, and prescriptive next actions.</p>
+                {!news&&<p className="text-xs text-zinc-400 mt-2">Tip: fetch live news first for a more accurate analysis.</p>}
               </div>
             )}
 
@@ -713,7 +713,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
               <div className="space-y-6">
                 <div className="grid grid-cols-12 gap-4">
                   <div className="col-span-4 border border-zinc-800 rounded p-6 flex flex-col items-center justify-center bg-gradient-to-br from-zinc-900/40 to-transparent">
-                    {loadingPhase==='primary'?<div className="flex flex-col items-center gap-3"><Loader2 className="w-8 h-8 animate-spin text-zinc-700"/><p className="text-xs text-zinc-600">Scoring…</p></div>:<>
+                    {loadingPhase==='primary'?<div className="flex flex-col items-center gap-3"><Loader2 className="w-8 h-8 animate-spin text-zinc-700"/><p className="text-xs text-zinc-400">Scoring…</p></div>:<>
                       <HealthRing score={analysis.healthScore}/>
                       <button onClick={()=>setReasoningOpen(!reasoningOpen)} className="mt-4 text-[11px] uppercase tracking-widest text-zinc-500 hover:text-amber-400 flex items-center gap-1 transition-colors">
                         {reasoningOpen?<ChevronDown className="w-3 h-3"/>:<ChevronRight className="w-3 h-3"/>} Score Breakdown
@@ -722,7 +722,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
                   </div>
                   {phase1Ready&&analysis?.nextAction&&(
                     <div className="col-span-8 border border-amber-400/30 rounded p-6 bg-amber-400/5">
-                      <div className="flex items-center gap-2 mb-3"><Target className="w-4 h-4 text-amber-400"/><span className="text-[11px] uppercase tracking-widest text-amber-400">Next Best Action</span><span className="ml-auto text-[10px] uppercase tracking-widest text-zinc-500" style={{fontFamily:'JetBrains Mono, monospace'}}>{analysis.nextAction.owner} · {analysis.nextAction.timeline}</span></div>
+                      <div className="flex items-center gap-2 mb-3"><Target className="w-4 h-4 text-amber-400"/><span className="text-[11px] uppercase tracking-widest text-amber-400">Next Best Action</span><span className="ml-auto text-[10px] uppercase tracking-widest text-zinc-400" style={{fontFamily:'JetBrains Mono, monospace'}}>{analysis.nextAction.owner} · {analysis.nextAction.timeline}</span></div>
                       <h3 className="text-xl text-zinc-100 mb-3" style={{fontFamily:'Instrument Serif, serif'}}>{analysis.nextAction.headline}</h3>
                       <p className="text-sm text-zinc-300 leading-relaxed">{analysis.nextAction.rationale}</p>
                     </div>
@@ -733,13 +733,13 @@ Return ONLY valid JSON, no preamble, no markdown fences:
                   <div className="border border-zinc-800 rounded overflow-hidden bg-zinc-900/20">
                     {/* Score reasoning — clearly labeled */}
                     <div className="px-6 py-5 border-b border-zinc-800 bg-zinc-900/30">
-                      <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-2">Score Reasoning</p>
+                      <p className="text-[10px] uppercase tracking-widest text-zinc-400 mb-2">Score Reasoning</p>
                       <p className="text-sm text-zinc-200 leading-relaxed">{analysis.scoreReasoning}</p>
                     </div>
 
                     {/* Signal breakdown table */}
                     <div className="px-6 py-4 border-b border-zinc-800">
-                      <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-4">Signal Breakdown</p>
+                      <p className="text-[10px] uppercase tracking-widest text-zinc-400 mb-4">Signal Breakdown</p>
                       <div className="space-y-4">
                         {Object.entries(analysis.signalScores).map(([key, s]) => {
                           const contribution = ((s.score * s.weight) / 100).toFixed(1);
@@ -762,13 +762,13 @@ Return ONLY valid JSON, no preamble, no markdown fences:
                             <div key={key}>
                               <div className="flex items-start justify-between mb-1.5 gap-4">
                                 <div className="flex items-start gap-3 min-w-0">
-                                  <span className="text-[11px] uppercase tracking-widest text-zinc-500 flex-shrink-0 w-28">{label}</span>
+                                  <span className="text-[11px] uppercase tracking-widest text-zinc-400 flex-shrink-0 w-28">{label}</span>
                                   <span className="text-xs text-zinc-300 leading-relaxed">{s.note}</span>
                                 </div>
                                 <div className="flex items-center gap-3 flex-shrink-0" style={{fontFamily:'JetBrains Mono, monospace'}}>
-                                  <span className="text-[11px] text-zinc-600">{s.weight}%</span>
+                                  <span className="text-[11px] text-zinc-400">{s.weight}%</span>
                                   <span className={`text-sm font-medium w-8 text-right ${s.score>=75?'text-emerald-400':s.score>=50?'text-amber-400':'text-rose-400'}`}>{s.score}</span>
-                                  <span className="text-[11px] text-zinc-500 w-10 text-right">+{contribution}</span>
+                                  <span className="text-[11px] text-zinc-400 w-10 text-right">+{contribution}</span>
                                 </div>
                               </div>
                               <div className="h-1 bg-zinc-800 rounded-full overflow-hidden">
@@ -788,7 +788,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
 
                     {/* Category assignment — readable explanation */}
                     <div className="px-6 py-4 bg-zinc-900/10">
-                      <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-3">Category Assignment</p>
+                      <p className="text-[10px] uppercase tracking-widest text-zinc-400 mb-3">Category Assignment</p>
                       <div className="flex items-start gap-3">
                         <span className={`text-[9px] uppercase tracking-widest px-1.5 py-1 rounded border flex-shrink-0 ${CAT_META[cat].badgeClass}`}>{CAT_META[cat].label} · {sub}</span>
                         <p className="text-xs text-zinc-400 leading-relaxed">
@@ -801,28 +801,28 @@ Return ONLY valid JSON, no preamble, no markdown fences:
                       </div>
                       <div className="mt-3 pt-3 border-t border-zinc-900 grid grid-cols-2 gap-3">
                         <div>
-                          <p className="text-[10px] uppercase tracking-widest text-zinc-700 mb-1">Health Score</p>
-                          <p className="text-xs text-zinc-500">Weighted average of all 7 signal scores (0–100 each), multiplied by their respective weights</p>
+                          <p className="text-[10px] uppercase tracking-widest text-zinc-500 mb-1">Health Score</p>
+                          <p className="text-xs text-zinc-400">Weighted average of all 7 signal scores (0–100 each), multiplied by their respective weights</p>
                         </div>
                         <div>
-                          <p className="text-[10px] uppercase tracking-widest text-zinc-700 mb-1">Category</p>
-                          <p className="text-xs text-zinc-500">Determined separately from health score — evaluates risk and expansion signal patterns across all account dimensions</p>
+                          <p className="text-[10px] uppercase tracking-widest text-zinc-500 mb-1">Category</p>
+                          <p className="text-xs text-zinc-400">Determined separately from health score — evaluates risk and expansion signal patterns across all account dimensions</p>
                         </div>
                       </div>
                     </div>
                   </div>
                 )}
 
-                {loadingPhase==='secondary'&&<div className="border border-dashed border-zinc-800 rounded p-6 flex items-center gap-3"><Loader2 className="w-4 h-4 animate-spin text-zinc-600"/><p className="text-sm text-zinc-600">Loading risk flags, expansion signals, and QBR points…</p></div>}
+                {loadingPhase==='secondary'&&<div className="border border-dashed border-zinc-800 rounded p-6 flex items-center gap-3"><Loader2 className="w-4 h-4 animate-spin text-zinc-600"/><p className="text-sm text-zinc-400">Loading risk flags, expansion signals, and QBR points…</p></div>}
 
                 {phase2Ready&&(<>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <div className="flex items-center gap-2 mb-3"><AlertTriangle className="w-3.5 h-3.5 text-rose-400"/><span className="text-[11px] uppercase tracking-widest text-zinc-500">Risk Flags</span></div>
+                      <div className="flex items-center gap-2 mb-3"><AlertTriangle className="w-3.5 h-3.5 text-rose-400"/><span className="text-[11px] uppercase tracking-widest text-zinc-400">Risk Flags</span></div>
                       <div className="space-y-2">{!analysis.riskFlags?.length?<div className="text-xs text-zinc-600 p-3 border border-dashed border-zinc-800 rounded">No active risks detected.</div>:analysis.riskFlags.map((r,i)=>(<div key={i} className={`p-3 border rounded ${sevColor[r.severity]}`}><div className="flex items-center gap-2 mb-1"><span className="text-[9px] uppercase tracking-widest opacity-70">{r.severity}</span><span className="text-sm font-medium">{r.title}</span></div><p className="text-xs opacity-80 leading-relaxed">{r.detail}</p></div>))}</div>
                     </div>
                     <div>
-                      <div className="flex items-center gap-2 mb-3"><TrendingUp className="w-3.5 h-3.5 text-emerald-400"/><span className="text-[11px] uppercase tracking-widest text-zinc-500">Expansion Signals</span></div>
+                      <div className="flex items-center gap-2 mb-3"><TrendingUp className="w-3.5 h-3.5 text-emerald-400"/><span className="text-[11px] uppercase tracking-widest text-zinc-400">Expansion Signals</span></div>
                       <div className="space-y-2">{!analysis.expansionSignals?.length?<div className="text-xs text-zinc-600 p-3 border border-dashed border-zinc-800 rounded">No expansion signals identified.</div>:analysis.expansionSignals.map((s,i)=>(<div key={i} className={`p-3 border rounded ${strColor[s.strength]}`}><div className="flex items-center gap-2 mb-1"><span className="text-[9px] uppercase tracking-widest opacity-70">{s.strength}</span><span className="text-sm font-medium">{s.title}</span></div><p className="text-xs opacity-80 leading-relaxed">{s.detail}</p></div>))}</div>
                     </div>
                   </div>
@@ -845,8 +845,8 @@ Return ONLY valid JSON, no preamble, no markdown fences:
             )}
           </>)}
 
-          <footer className="mt-12 pt-6 border-t border-zinc-900 flex items-center justify-between text-[11px] text-zinc-600">
-            <span className="text-zinc-500">Powered by Claude · Live news via Serper · {new Date().getFullYear()}</span>
+          <footer className="mt-12 pt-6 border-t border-zinc-900 flex items-center justify-between text-[11px] text-zinc-400">
+            <span className="text-zinc-400">Powered by Claude · Live news via Serper · {new Date().getFullYear()}</span>
             <button onClick={()=>editMode?setEditMode(false):setShowPasswordModal(true)} className={`transition-colors hover:text-zinc-400 ${editMode?'text-amber-400/60':'text-zinc-700'}`} style={{fontFamily:'JetBrains Mono, monospace'}} title={editMode?'Exit edit mode':'Edit mode'}>
               {editMode?'v0.6 · edit on':'v0.6'}
             </button>
