@@ -21,7 +21,8 @@ const DEFAULT_ACCOUNTS = [
     engagement: { lastQbr: "2026-03-18", execSponsorStatus: "highly active", lastTouchDays: 4, qbrAttendance: "100%" },
     expansion: { historyArr: 300000, historyNote: "+$300K Q4 2025 (ad-tier rollout)", signals: "Exploring gaming vertical integration" },
     relationship: { championStable: true, recentChanges: "Same VP Eng and CTO for 26 months. Strong exec alignment." },
-    external: "Q1 2026 revenue $12.25B, up 16% YoY. Ad tier on track for $3B revenue. Raising subscription prices across all plans."
+    external: "Q1 2026 revenue $12.25B, up 16% YoY. Ad tier on track for $3B revenue. Raising subscription prices across all plans.",
+    renewal: { probability: "high", contractType: "multi-year", autoRenew: true, competitiveExposure: "none", updatedAt: "2026-04-28" }
   },
   {
     id: 2,
@@ -37,7 +38,8 @@ const DEFAULT_ACCOUNTS = [
     engagement: { lastQbr: "2025-12-15", execSponsorStatus: "disengaged", lastTouchDays: 52, qbrAttendance: "missed last 2" },
     expansion: { historyArr: 0, historyNote: "Flat since initial contract", signals: "None — budget frozen" },
     relationship: { championStable: false, recentChanges: "Original VP champion departed March 2026. New co-CEOs Sicilia and Magouyrk named — internal priorities unknown." },
-    external: "20-30K layoffs confirmed to fund $50B AI infrastructure buildout. New co-CEOs named. Cerner sale under consideration. Vendor budgets under active review."
+    external: "20-30K layoffs confirmed to fund $50B AI infrastructure buildout. New co-CEOs named. Cerner sale under consideration. Vendor budgets under active review.",
+    renewal: { probability: "at-risk", contractType: "annual", autoRenew: false, competitiveExposure: "active-eval", updatedAt: "2026-04-28" }
   },
   {
     id: 3,
@@ -53,7 +55,8 @@ const DEFAULT_ACCOUNTS = [
     engagement: { lastQbr: "2026-04-02", execSponsorStatus: "highly active", lastTouchDays: 2, qbrAttendance: "100% + ad-hoc syncs" },
     expansion: { historyArr: 500000, historyNote: "+$500K Q1 2026 (enterprise seat expansion)", signals: "CTO requesting capacity scoping for new model evaluation pipeline" },
     relationship: { championStable: true, recentChanges: "Added Director of ML Infrastructure as secondary champion. Core team stable." },
-    external: "Closed $30B Series G at $380B valuation Feb 2026. Enterprise subscriptions 4x YTD. Claude Code ARR at $2.5B run rate. Aggressive enterprise hiring."
+    external: "Closed $30B Series G at $380B valuation Feb 2026. Enterprise subscriptions 4x YTD. Claude Code ARR at $2.5B run rate. Aggressive enterprise hiring.",
+    renewal: { probability: "high", contractType: "multi-year", autoRenew: true, competitiveExposure: "none", updatedAt: "2026-04-28" }
   },
   {
     id: 4,
@@ -69,7 +72,8 @@ const DEFAULT_ACCOUNTS = [
     engagement: { lastQbr: "2026-01-22", execSponsorStatus: "transitioning", lastTouchDays: 38, qbrAttendance: "champion replaced mid-cycle" },
     expansion: { historyArr: 30000, historyNote: "Modest +$30K seat add in 2025", signals: "None — cost review underway" },
     relationship: { championStable: false, recentChanges: "Agency consolidation program displaced original champion. New stakeholder from direct channel team — relationship not yet established." },
-    external: "Consolidating agencies, reducing commissions 23% on new business. Workforce reduction underway. Cost-cutting mode with focus on direct channel over traditional agency model."
+    external: "Consolidating agencies, reducing commissions 23% on new business. Workforce reduction underway. Cost-cutting mode with focus on direct channel over traditional agency model.",
+    renewal: { probability: "medium", contractType: "annual", autoRenew: false, competitiveExposure: "rumored", updatedAt: "2026-04-28" }
   },
   {
     id: 5,
@@ -85,7 +89,8 @@ const DEFAULT_ACCOUNTS = [
     engagement: { lastQbr: "2026-02-10", execSponsorStatus: "active", lastTouchDays: 18, qbrAttendance: "consistent" },
     expansion: { historyArr: 70000, historyNote: "+$70K in late 2025", signals: "Paused — pending outcome of Win Now restructuring" },
     relationship: { championStable: true, recentChanges: "Champion stable but operating under significant internal pressure from Win Now transformation mandate." },
-    external: "Second round of layoffs in 2026 — 1,400 roles cut April 2026. DTC revenue fell 4% while wholesale grew 5%. Win Now restructuring program targeting margin recovery."
+    external: "Second round of layoffs in 2026 — 1,400 roles cut April 2026. DTC revenue fell 4% while wholesale grew 5%. Win Now restructuring program targeting margin recovery.",
+    renewal: { probability: "medium", contractType: "annual", autoRenew: false, competitiveExposure: "rumored", updatedAt: "2026-04-28" }
   },
   {
     id: 6,
@@ -101,7 +106,8 @@ const DEFAULT_ACCOUNTS = [
     engagement: { lastQbr: "2026-03-05", execSponsorStatus: "active", lastTouchDays: 11, qbrAttendance: "consistent" },
     expansion: { historyArr: 120000, historyNote: "+$120K in 2025 (Network 2.0 rollout)", signals: "Evaluating additional modules for digital intelligence layer" },
     relationship: { championStable: true, recentChanges: "Same VP Operations for 3 years. Strong relationship. New CFO Dietrich aligned to transformation agenda." },
-    external: "Q3 2026 earnings beat — revenue up 8% YoY, raised full-year guidance to $19.30-$20.10 EPS. Network 2.0 delivering $1B+ in cost savings. Spinning off FedEx Freight by June 2026."
+    external: "Q3 2026 earnings beat — revenue up 8% YoY, raised full-year guidance to $19.30-$20.10 EPS. Network 2.0 delivering $1B+ in cost savings. Spinning off FedEx Freight by June 2026.",
+    renewal: { probability: "high", contractType: "multi-year", autoRenew: true, competitiveExposure: "none", updatedAt: "2026-04-28" }
   }
 ];
 
@@ -190,8 +196,8 @@ const Input = ({value,onChange,placeholder,type='text'}) => (<input type={type} 
 const Sel = ({value,onChange,children}) => (<select value={value} onChange={onChange} className="w-full bg-zinc-900 border border-zinc-700 rounded px-3 py-2 text-sm text-zinc-100 focus:outline-none focus:border-amber-400/50">{children}</select>);
 
 // ── Account form ────────────────────────────────────────────────
-const BLANK = { name:'',company:'',industry:'',logo:'',arr:'',contractEnd:'',tenureMonths:'', usage:{utilization:'',change30d:'',trend:'flat'}, support:{tickets30d:'',severity:'medium',sentiment:'',csat:''}, engagement:{lastQbr:'',execSponsorStatus:'',lastTouchDays:'',qbrAttendance:''}, expansion:{historyArr:'',historyNote:'',signals:''}, relationship:{championStable:true,recentChanges:''}, external:'' };
-const toForm = (a) => ({...a,arr:String(a.arr??''),tenureMonths:String(a.tenureMonths??''),usage:{...a.usage,utilization:String(a.usage?.utilization??''),change30d:String(a.usage?.change30d??'')},support:{...a.support,tickets30d:String(a.support?.tickets30d??''),csat:String(a.support?.csat??'')},engagement:{...a.engagement,lastTouchDays:String(a.engagement?.lastTouchDays??'')},expansion:{...a.expansion,historyArr:String(a.expansion?.historyArr??'')},});
+const BLANK = { name:'',company:'',industry:'',logo:'',arr:'',contractEnd:'',tenureMonths:'', usage:{utilization:'',change30d:'',trend:'flat'}, support:{tickets30d:'',severity:'medium',sentiment:'',csat:''}, engagement:{lastQbr:'',execSponsorStatus:'',lastTouchDays:'',qbrAttendance:''}, expansion:{historyArr:'',historyNote:'',signals:''}, relationship:{championStable:true,recentChanges:''}, external:'', renewal:{probability:'medium',contractType:'annual',autoRenew:false,competitiveExposure:'none',updatedAt:''} };
+const toForm = (a) => ({...a,arr:String(a.arr??''),tenureMonths:String(a.tenureMonths??''),usage:{...a.usage,utilization:String(a.usage?.utilization??''),change30d:String(a.usage?.change30d??'')},support:{...a.support,tickets30d:String(a.support?.tickets30d??''),csat:String(a.support?.csat??'')},engagement:{...a.engagement,lastTouchDays:String(a.engagement?.lastTouchDays??'')},expansion:{...a.expansion,historyArr:String(a.expansion?.historyArr??'')},renewal:{...(a.renewal||{})}});
 const fromForm = (f) => ({...f,logo:f.logo||f.name.slice(0,2).toUpperCase(),company:f.company||f.name,arr:Number(f.arr)||0,tenureMonths:Number(f.tenureMonths)||0,usage:{...f.usage,utilization:Number(f.usage.utilization)||0,change30d:Number(f.usage.change30d)||0},support:{...f.support,tickets30d:Number(f.support.tickets30d)||0,csat:Number(f.support.csat)||0},engagement:{...f.engagement,lastTouchDays:Number(f.engagement.lastTouchDays)||0},expansion:{...f.expansion,historyArr:Number(f.expansion.historyArr)||0},relationship:{...f.relationship,championStable:f.relationship.championStable===true||f.relationship.championStable==='true'},});
 
 const JSON_TEMPLATE = `{
@@ -252,6 +258,12 @@ const AccountFormModal = ({initial,title,submitLabel,onSubmit,onClose}) => {
               <div><p className="text-[10px] uppercase tracking-widest text-amber-400/70 mb-3">Expansion</p><div className="grid grid-cols-2 gap-4"><Field label="Expansion ARR ($)"><Input type="number" value={form.expansion.historyArr} onChange={e=>set('expansion.historyArr',e.target.value)} placeholder="50000"/></Field><Field label="Expansion Note"><Input value={form.expansion.historyNote} onChange={e=>set('expansion.historyNote',e.target.value)} placeholder="+$50K seat add 2025"/></Field><Field label="Signals"><Input value={form.expansion.signals} onChange={e=>set('expansion.signals',e.target.value)} placeholder="None active"/></Field></div></div>
               <div><p className="text-[10px] uppercase tracking-widest text-amber-400/70 mb-3">Relationship</p><div className="grid grid-cols-2 gap-4"><Field label="Champion Stable?"><Sel value={String(form.relationship.championStable)} onChange={e=>set('relationship.championStable',e.target.value==='true')}><option value="true">Stable</option><option value="false">Disrupted</option></Sel></Field><Field label="Recent Changes"><Input value={form.relationship.recentChanges} onChange={e=>set('relationship.recentChanges',e.target.value)} placeholder="Stable — same VP for 12 months"/></Field></div></div>
               <div><p className="text-[10px] uppercase tracking-widest text-amber-400/70 mb-3">External Signal</p><Field label="Current context (will be enriched by live news)"><textarea value={form.external} onChange={e=>set('external',e.target.value)} rows={3} className="w-full bg-zinc-900 border border-zinc-700 rounded px-3 py-2 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-amber-400/50" placeholder="Recent funding, layoffs, earnings, M&A..."/></Field></div>
+              <div><p className="text-[10px] uppercase tracking-widest text-amber-400/70 mb-3">Renewal Outlook</p><div className="grid grid-cols-2 gap-4">
+                <Field label="Renewal Probability"><Sel value={form.renewal?.probability||'medium'} onChange={e=>set('renewal.probability',e.target.value)}><option value="high">High Confidence</option><option value="medium">Needs Attention</option><option value="at-risk">At Risk</option></Sel></Field>
+                <Field label="Contract Type"><Sel value={form.renewal?.contractType||'annual'} onChange={e=>set('renewal.contractType',e.target.value)}><option value="annual">Annual</option><option value="multi-year">Multi-year</option></Sel></Field>
+                <Field label="Auto-Renew?"><Sel value={String(form.renewal?.autoRenew||false)} onChange={e=>set('renewal.autoRenew',e.target.value==='true')}><option value="true">Yes</option><option value="false">No — Manual</option></Sel></Field>
+                <Field label="Competitive Exposure"><Sel value={form.renewal?.competitiveExposure||'none'} onChange={e=>set('renewal.competitiveExposure',e.target.value)}><option value="none">None detected</option><option value="rumored">Rumored</option><option value="active-eval">Active eval</option></Sel></Field>
+              </div></div>
             </>
           )}
         </div>
@@ -416,7 +428,7 @@ export default function HealthScoreEngine() {
       ? `\nLIVE NEWS CONTEXT (fetched ${fmtDate(news.fetchedAt)}):\n${news.summary}`
       : `\nEXTERNAL CONTEXT:\n${account.external}`;
 
-    const baseContext = `ACCOUNT DATA:\n${JSON.stringify({...account,external:undefined},null,2)}${newsContext}`;
+    const baseContext = `ACCOUNT DATA:\n${JSON.stringify({...account,external:undefined},null,2)}${newsContext}\n\nRENEWAL OUTLOOK:\nProbability: ${account.renewal?.probability||'unknown'} | Contract: ${account.renewal?.contractType||'unknown'} | Auto-renew: ${account.renewal?.autoRenew?'yes':'no'} | Competitive exposure: ${account.renewal?.competitiveExposure||'unknown'}`;
 
     const prompt1 = `You are a Senior CS strategist. Be terse — keep all string values under 20 words. Evaluate ALL signal categories: usage, support, engagement, expansion history, relationship, AND external. Do not anchor on a single dimension.
 
@@ -429,11 +441,13 @@ Return ONLY valid JSON, no preamble, no markdown fences:
   "tldr": "<1 sentence: company name + most urgent cross-signal finding + implication>",
   "scoreReasoning": "<2 sentences max, cite signals from at least 2 different categories>",
   "signalScores": {
-    "usage":        { "score": <0-100>, "weight": 25, "note": "<max 10 words citing utilization or trend>" },
-    "engagement":   { "score": <0-100>, "weight": 20, "note": "<max 10 words citing touch days or QBR>" },
-    "commercial":   { "score": <0-100>, "weight": 20, "note": "<max 10 words citing ARR or expansion>" },
-    "relationship": { "score": <0-100>, "weight": 20, "note": "<max 10 words citing champion or stakeholder>" },
-    "external":     { "score": <0-100>, "weight": 15, "note": "<max 10 words citing a market signal>" }
+    "productAdoption":  { "score": <0-100>, "weight": 20, "note": "<max 10 words citing utilization % or trend>" },
+    "execSponsor":      { "score": <0-100>, "weight": 20, "note": "<max 10 words citing sponsor status or EBR>" },
+    "engagementCadence":{ "score": <0-100>, "weight": 15, "note": "<max 10 words citing last touch or QBR cadence>" },
+    "expansionHistory": { "score": <0-100>, "weight": 15, "note": "<max 10 words citing expansion ARR or signals>" },
+    "champion":         { "score": <0-100>, "weight": 15, "note": "<max 10 words citing champion stability>" },
+    "renewalOutlook":   { "score": <0-100>, "weight": 10, "note": "<max 10 words citing probability or competitive exposure>" },
+    "external":         { "score": <0-100>, "weight": 5,  "note": "<max 10 words citing a market signal>" }
   },
   "categoryScores": {
     "atRiskScore": <integer — weighted sum of risk signals, higher = more at risk>,
@@ -562,6 +576,49 @@ Return ONLY valid JSON, no preamble, no markdown fences:
                   <span>Renews {account.contractEnd}</span><span className="text-zinc-700">·</span>
                   <span>{account.tenureMonths}mo tenure</span>
                 </div>
+                {/* Renewal Outlook block */}
+                {(() => {
+                  const r = account.renewal || {};
+                  const prob = r.probability || 'medium';
+                  const probColors = { high:'text-emerald-400 bg-emerald-500/10 border-emerald-500/30', medium:'text-amber-400 bg-amber-500/10 border-amber-500/30', 'at-risk':'text-rose-400 bg-rose-500/10 border-rose-500/30' };
+                  const probLabels = { high:'High Confidence', medium:'Needs Attention', 'at-risk':'At Risk' };
+                  const expColors = { none:'text-zinc-300', rumored:'text-amber-400', 'active-eval':'text-rose-400' };
+                  const expLabels = { none:'None detected', rumored:'Rumored', 'active-eval':'Active eval' };
+                  const RField = ({label, value, valueClass='text-zinc-200'}) => (
+                    <div>
+                      <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-1">{label}</p>
+                      <p className={`text-sm font-medium ${valueClass}`}>{value}</p>
+                    </div>
+                  );
+                  return (
+                    <div className="border border-zinc-800 rounded p-4 mb-4 bg-zinc-900/20">
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="text-[10px] uppercase tracking-widest text-zinc-600">Renewal Outlook</span>
+                        {r.updatedAt && <span className="text-[10px] text-zinc-700" style={{fontFamily:'JetBrains Mono, monospace'}}>Updated {r.updatedAt}</span>}
+                      </div>
+                      <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                        <div>
+                          <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-1.5">Probability</p>
+                          <span className={`text-[11px] uppercase tracking-widest px-2 py-1 rounded border font-medium ${probColors[prob]||probColors.medium}`}>
+                            {probLabels[prob]||prob}
+                          </span>
+                        </div>
+                        <div>
+                          <p className="text-[10px] uppercase tracking-widest text-zinc-600 mb-1.5">Competitive Exposure</p>
+                          <span className={`text-sm font-medium ${expColors[r.competitiveExposure]||'text-zinc-300'}`}>
+                            {expLabels[r.competitiveExposure]||'Unknown'}
+                          </span>
+                        </div>
+                        <RField label="Contract Type" value={r.contractType ? r.contractType.charAt(0).toUpperCase() + r.contractType.slice(1) : '—'} />
+                        <RField
+                          label="Auto-Renew"
+                          value={r.autoRenew === undefined ? '—' : r.autoRenew ? 'Yes' : 'No — Manual'}
+                          valueClass={r.autoRenew ? 'text-emerald-400' : 'text-amber-400'}
+                        />
+                      </div>
+                    </div>
+                  );
+                })()}
                 <p className="text-sm text-zinc-400 leading-relaxed border-l-2 border-zinc-800 pl-3 mb-3">{tldr}</p>
                 {isStale&&<div className="flex items-center gap-2 text-xs text-amber-400/70 mb-3"><AlertCircle className="w-3.5 h-3.5"/><span>Analysis is {staleHours}h old — consider re-running.</span></div>}
                 {analysis?.immediateActions&&(
@@ -576,13 +633,28 @@ Return ONLY valid JSON, no preamble, no markdown fences:
               </button>
             </div>
 
-            {/* Signal cards */}
+            {/* Signal cards — 6 cards, no Support */}
             <div className="grid grid-cols-3 gap-3 mb-8">
-              <SignalCard icon={Activity} label="Utilization" value={`${account.usage.utilization}%`} sublabel={`${account.usage.change30d>0?'+':''}${account.usage.change30d}% last 30d`} accent={account.usage.utilization>=75?'emerald':account.usage.utilization>=50?'amber':'rose'}/>
-              <SignalCard icon={MessageSquare} label="Support" value={`${account.support.tickets30d} tickets / ${account.support.severity}`} sublabel={`CSAT ${account.support.csat} · ${account.support.sentiment}`} accent={account.support.severity==='high'?'rose':account.support.severity==='medium'?'amber':'emerald'}/>
-              <SignalCard icon={Calendar} label="Engagement" value={`${account.engagement.lastTouchDays}d since last touch`} sublabel={`Sponsor: ${account.engagement.execSponsorStatus}`} accent={account.engagement.lastTouchDays<14?'emerald':account.engagement.lastTouchDays<30?'amber':'rose'}/>
-              <SignalCard icon={DollarSign} label="Expansion History" value={account.expansion.historyArr>0?`+${fmtC(account.expansion.historyArr)}`:'None'} sublabel={account.expansion.historyNote} accent={account.expansion.historyArr>0?'emerald':'zinc'}/>
-              <SignalCard icon={Users} label="Champion" value={account.relationship.championStable?'Stable':'Disrupted'} sublabel={account.relationship.recentChanges} accent={account.relationship.championStable?'emerald':'rose'}/>
+              <SignalCard icon={Activity} label="Product Adoption"
+                value={`${account.usage.utilization}% utilized`}
+                sublabel={`${account.usage.change30d>0?'+':''}${account.usage.change30d}% last 30d · ${account.usage.trend}`}
+                accent={account.usage.utilization>=75?'emerald':account.usage.utilization>=50?'amber':'rose'}/>
+              <SignalCard icon={Target} label="Exec Sponsor"
+                value={account.engagement.execSponsorStatus}
+                sublabel={`Last QBR: ${account.engagement.lastQbr||'—'} · ${account.engagement.qbrAttendance}`}
+                accent={account.engagement.execSponsorStatus==='highly active'||account.engagement.execSponsorStatus==='active'?'emerald':account.engagement.execSponsorStatus==='transitioning'?'amber':'rose'}/>
+              <SignalCard icon={Calendar} label="Engagement Cadence"
+                value={`${account.engagement.lastTouchDays}d since last touch`}
+                sublabel={`QBR attendance: ${account.engagement.qbrAttendance}`}
+                accent={account.engagement.lastTouchDays<14?'emerald':account.engagement.lastTouchDays<30?'amber':'rose'}/>
+              <SignalCard icon={DollarSign} label="Expansion History"
+                value={account.expansion.historyArr>0?`+${fmtC(account.expansion.historyArr)}`:'None'}
+                sublabel={account.expansion.historyNote}
+                accent={account.expansion.historyArr>0?'emerald':'zinc'}/>
+              <SignalCard icon={Users} label="Champion"
+                value={account.relationship.championStable?'Stable':'Disrupted'}
+                sublabel={account.relationship.recentChanges}
+                accent={account.relationship.championStable?'emerald':'rose'}/>
 
               {/* Live External Signal card */}
               <div className="p-4 bg-zinc-900/40 border border-zinc-800 rounded">
@@ -759,7 +831,7 @@ Return ONLY valid JSON, no preamble, no markdown fences:
           <footer className="mt-12 pt-6 border-t border-zinc-900 flex items-center justify-between text-[11px] text-zinc-600">
             <span>Powered by Claude · Live news via Serper · {new Date().getFullYear()}</span>
             <button onClick={()=>editMode?setEditMode(false):setShowPasswordModal(true)} className={`transition-colors hover:text-zinc-400 ${editMode?'text-amber-400/60':'text-zinc-700'}`} style={{fontFamily:'JetBrains Mono, monospace'}} title={editMode?'Exit edit mode':'Edit mode'}>
-              {editMode?'v0.5 · edit on':'v0.5'}
+              {editMode?'v0.6 · edit on':'v0.6'}
             </button>
           </footer>
         </main>
