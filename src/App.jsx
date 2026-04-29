@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { TrendingUp, AlertTriangle, Sparkles, ChevronDown, ChevronRight, MessageSquare, Target, Activity, Users, DollarSign, Calendar, Zap, Loader2, Linkedin, Github, Plus, X, Pencil, Clock, AlertCircle, Lock, RefreshCw, ExternalLink } from "lucide-react";
 
-const STORAGE_ACCOUNTS = 'helix-accounts-v2';
-const STORAGE_ANALYSIS  = 'helix-analysis-v2';
-const STORAGE_NEWS      = 'helix-news-v2';
+const STORAGE_ACCOUNTS = 'helix-accounts-v3';
+const STORAGE_ANALYSIS  = 'helix-analysis-v3';
+const STORAGE_NEWS      = 'helix-news-v3';
 
 // ── Real company accounts ───────────────────────────────────────
 const DEFAULT_ACCOUNTS = [
