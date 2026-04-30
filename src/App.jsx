@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { TrendingUp, AlertTriangle, Sparkles, ChevronDown, ChevronRight, MessageSquare, Target, Activity, Users, DollarSign, Calendar, Zap, Loader2, Linkedin, Github, Plus, X, Pencil, Clock, AlertCircle, Lock, RefreshCw, ExternalLink } from "lucide-react";
 
-const STORAGE_ACCOUNTS = 'helix-accounts-v4';
-const STORAGE_ANALYSIS  = 'helix-analysis-v4';
-const STORAGE_NEWS      = 'helix-news-v4';
+const STORAGE_ACCOUNTS = 'helix-accounts-v5';
+const STORAGE_ANALYSIS  = 'helix-analysis-v5';
+const STORAGE_NEWS      = 'helix-news-v5';
 
 // ── Real company accounts ───────────────────────────────────────
 const DEFAULT_ACCOUNTS = [
@@ -108,6 +108,23 @@ const DEFAULT_ACCOUNTS = [
     relationship: { championStable: true, recentChanges: "Same VP Operations for 3 years. Strong relationship. New CFO Dietrich aligned to transformation agenda." },
     external: "Q3 2026 earnings beat — revenue up 8% YoY, raised full-year guidance to $19.30-$20.10 EPS. Network 2.0 delivering $1B+ in cost savings. Spinning off FedEx Freight by June 2026.",
     renewal: { probability: "high", contractType: "multi-year", autoRenew: true, competitiveExposure: "none", updatedAt: "2026-04-28" }
+,
+  {
+    id: 7,
+    name: "Asana",
+    company: "Asana",
+    industry: "Work Management / Enterprise SaaS",
+    logo: "AS",
+    arr: 500000,
+    contractEnd: "2027-06-30",
+    tenureMonths: 48,
+    usage: { utilization: 34, change30d: -5, trend: "down" },
+    support: { tickets30d: 8, severity: "medium", sentiment: "neutral", csat: 3.6 },
+    engagement: { lastQbr: "2026-01-15", execSponsorStatus: "active", lastTouchDays: 7, qbrAttendance: "consistent — prior CSM" },
+    expansion: { historyArr: 150000, historyNote: "+$150K 2025 (Device Trust expansion)", signals: "None active — adoption gaps must close first" },
+    relationship: { championStable: false, recentChanges: "CSM transition — new CSM assigned. Client-side contacts stable (VP Security, Director IT, IT Manager) but relationship with new CSM not yet established." },
+    external: "Asana navigating co-CEO transition and workforce restructuring. Focus on enterprise security initiatives and device compliance. Long-term 1Password partner with significant untapped EPM and Device Trust adoption potential.",
+    renewal: { probability: "medium", contractType: "multi-year", autoRenew: false, competitiveExposure: "none", updatedAt: "2026-04-29" }
   }
 ];
 
@@ -202,12 +219,34 @@ const Sel = ({value,onChange,children}) => (<select value={value} onChange={onCh
 // ── Account form ────────────────────────────────────────────────
 const BLANK = { name:'',company:'',industry:'',logo:'',arr:'',contractEnd:'',tenureMonths:'', usage:{utilization:'',change30d:'',trend:'flat'}, support:{tickets30d:'',severity:'medium',sentiment:'',csat:''}, engagement:{lastQbr:'',execSponsorStatus:'',lastTouchDays:'',qbrAttendance:''}, expansion:{historyArr:'',historyNote:'',signals:''}, relationship:{championStable:true,recentChanges:''}, external:'', renewal:{probability:'medium',contractType:'annual',autoRenew:false,competitiveExposure:'none',updatedAt:''} };
 const toForm = (a) => ({...a,arr:String(a.arr??''),tenureMonths:String(a.tenureMonths??''),usage:{...a.usage,utilization:String(a.usage?.utilization??''),change30d:String(a.usage?.change30d??'')},support:{...a.support,tickets30d:String(a.support?.tickets30d??''),csat:String(a.support?.csat??'')},engagement:{...a.engagement,lastTouchDays:String(a.engagement?.lastTouchDays??'')},expansion:{...a.expansion,historyArr:String(a.expansion?.historyArr??'')},renewal:{...(a.renewal||{})}});
-const fromForm = (f) => ({...f,logo:f.logo||f.name.slice(0,2).toUpperCase(),company:f.company||f.name,arr:Number(f.arr)||0,tenureMonths:Number(f.tenureMonths)||0,usage:{...f.usage,utilization:Number(f.usage.utilization)||0,change30d:Number(f.usage.change30d)||0},support:{...f.support,tickets30d:Number(f.support.tickets30d)||0,csat:Number(f.support.csat)||0},engagement:{...f.engagement,lastTouchDays:Number(f.engagement.lastTouchDays)||0},expansion:{...f.expansion,historyArr:Number(f.expansion.historyArr)||0},relationship:{...f.relationship,championStable:f.relationship.championStable===true||f.relationship.championStable==='true'},});
+const fromForm = (f) => {
+  const usage = f.usage || {};
+  const support = f.support || {};
+  const engagement = f.engagement || {};
+  const expansion = f.expansion || {};
+  const relationship = f.relationship || {};
+  const renewal = f.renewal || {};
+  return {
+    ...f,
+    logo: f.logo || (f.name||'??').slice(0,2).toUpperCase(),
+    company: f.company || f.name,
+    arr: Number(f.arr) || 0,
+    tenureMonths: Number(f.tenureMonths) || 0,
+    usage: { utilization: Number(usage.utilization)||0, change30d: Number(usage.change30d)||0, trend: usage.trend||'flat' },
+    support: { tickets30d: Number(support.tickets30d)||0, severity: support.severity||'medium', sentiment: support.sentiment||'', csat: Number(support.csat)||0 },
+    engagement: { lastQbr: engagement.lastQbr||'', execSponsorStatus: engagement.execSponsorStatus||'', lastTouchDays: Number(engagement.lastTouchDays)||0, qbrAttendance: engagement.qbrAttendance||'' },
+    expansion: { historyArr: Number(expansion.historyArr)||0, historyNote: expansion.historyNote||'', signals: expansion.signals||'' },
+    relationship: { championStable: relationship.championStable===true||relationship.championStable==='true', recentChanges: relationship.recentChanges||'' },
+    external: f.external || '',
+    renewal: { probability: renewal.probability||'medium', contractType: renewal.contractType||'annual', autoRenew: renewal.autoRenew===true||renewal.autoRenew==='true'||false, competitiveExposure: renewal.competitiveExposure||'none', updatedAt: renewal.updatedAt||'' },
+  };
+};
 
 const JSON_TEMPLATE = `{
   "name": "Acme Corp",
   "company": "Acme Corp",
   "industry": "Enterprise SaaS",
+  "logo": "AC",
   "arr": 500000,
   "contractEnd": "2026-12-31",
   "tenureMonths": 18,
@@ -216,16 +255,42 @@ const JSON_TEMPLATE = `{
   "engagement": { "lastQbr": "2026-02-01", "execSponsorStatus": "active", "lastTouchDays": 14, "qbrAttendance": "consistent" },
   "expansion": { "historyArr": 50000, "historyNote": "+$50K seat add 2025", "signals": "None active" },
   "relationship": { "championStable": true, "recentChanges": "Stable — same VP for 12 months" },
-  "external": "Steady growth. No major news."
+  "external": "Steady growth. No major news.",
+  "renewal": { "probability": "medium", "contractType": "annual", "autoRenew": false, "competitiveExposure": "none", "updatedAt": "2026-04-29" }
 }`;
 
-const AccountFormModal = ({initial,title,submitLabel,onSubmit,onClose}) => {
+const AccountFormModal = ({initial,title,submitLabel,onSubmit,onClose,onDelete=null}) => {
   const [form,setForm] = useState(initial?toForm(initial):BLANK);
   const [jsonMode,setJsonMode] = useState(false);
   const [jsonInput,setJsonInput] = useState('');
   const [jsonError,setJsonError] = useState('');
   const set = (path,value) => setForm(prev=>{const p=path.split('.');if(p.length===1)return{...prev,[path]:value};return{...prev,[p[0]]:{...prev[p[0]],[p[1]]:value}};});
-  const handleParse = () => {try{const parsed=JSON.parse(jsonInput);setForm(toForm({...BLANK,...parsed}));setJsonError('');setJsonMode(false);}catch{setJsonError('Invalid JSON.');}};
+  const handleParse = () => {
+    try {
+      const parsed = JSON.parse(jsonInput);
+      const merged = {
+        name: parsed.name || '',
+        company: parsed.company || parsed.name || '',
+        industry: parsed.industry || '',
+        logo: parsed.logo || '',
+        arr: String(parsed.arr ?? ''),
+        contractEnd: parsed.contractEnd || '',
+        tenureMonths: String(parsed.tenureMonths ?? ''),
+        usage: { utilization: String(parsed.usage?.utilization ?? ''), change30d: String(parsed.usage?.change30d ?? ''), trend: parsed.usage?.trend || 'flat' },
+        support: { tickets30d: String(parsed.support?.tickets30d ?? ''), severity: parsed.support?.severity || 'medium', sentiment: parsed.support?.sentiment || '', csat: String(parsed.support?.csat ?? '') },
+        engagement: { lastQbr: parsed.engagement?.lastQbr || '', execSponsorStatus: parsed.engagement?.execSponsorStatus || '', lastTouchDays: String(parsed.engagement?.lastTouchDays ?? ''), qbrAttendance: parsed.engagement?.qbrAttendance || '' },
+        expansion: { historyArr: String(parsed.expansion?.historyArr ?? ''), historyNote: parsed.expansion?.historyNote || '', signals: parsed.expansion?.signals || '' },
+        relationship: { championStable: parsed.relationship?.championStable === true || parsed.relationship?.championStable === 'true', recentChanges: parsed.relationship?.recentChanges || '' },
+        external: parsed.external || '',
+        renewal: { probability: parsed.renewal?.probability || 'medium', contractType: parsed.renewal?.contractType || 'annual', autoRenew: parsed.renewal?.autoRenew === true, competitiveExposure: parsed.renewal?.competitiveExposure || 'none', updatedAt: parsed.renewal?.updatedAt || '' },
+      };
+      setForm(merged);
+      setJsonError('');
+      setJsonMode(false);
+    } catch(e) {
+      setJsonError('Invalid JSON — check formatting and try again: ' + e.message);
+    }
+  };
   return (
     <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
       <div className="bg-zinc-950 border border-zinc-800 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -271,9 +336,19 @@ const AccountFormModal = ({initial,title,submitLabel,onSubmit,onClose}) => {
             </>
           )}
         </div>
-        <div className="px-6 py-4 border-t border-zinc-800 flex justify-end gap-3">
-          <button onClick={onClose} className="px-4 py-2 text-sm text-zinc-500 hover:text-zinc-300">Cancel</button>
-          <button onClick={()=>onSubmit(fromForm(form))} className="px-5 py-2 bg-amber-400 text-zinc-950 text-sm font-medium rounded hover:bg-amber-300">{submitLabel}</button>
+        <div className="px-6 py-4 border-t border-zinc-800 flex items-center justify-between">
+          <div>
+            {onDelete && (
+              <button onClick={onDelete}
+                className="px-4 py-2 text-sm text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded transition-colors">
+                Delete Account
+              </button>
+            )}
+          </div>
+          <div className="flex gap-3">
+            <button onClick={onClose} className="px-4 py-2 text-sm text-zinc-400 hover:text-zinc-300">Cancel</button>
+            <button onClick={()=>onSubmit(fromForm(form))} className="px-5 py-2 bg-amber-400 text-zinc-950 text-sm font-medium rounded hover:bg-amber-300">{submitLabel}</button>
+          </div>
         </div>
       </div>
     </div>
@@ -525,7 +600,22 @@ Return ONLY valid JSON, no preamble, no markdown fences:
 
       {showPasswordModal&&<PasswordModal onSuccess={()=>setEditMode(true)} onClose={()=>setShowPasswordModal(false)}/>}
       {editMode&&showAddModal&&<AccountFormModal title="Add Account" submitLabel="Add Account" onClose={()=>setShowAddModal(false)} onSubmit={(data)=>{const a={...data,id:Date.now()};setAccounts(prev=>[...prev,a]);setSelectedId(a.id);setShowAddModal(false);}}/>}
-      {editMode&&editingAccount&&<AccountFormModal title={`Edit — ${editingAccount.name}`} submitLabel="Save Changes" initial={editingAccount} onClose={()=>setEditingAccount(null)} onSubmit={(data)=>{setAccounts(prev=>prev.map(a=>a.id===editingAccount.id?{...data,id:editingAccount.id}:a));setEditingAccount(null);}}/>}
+      {editMode&&editingAccount&&<AccountFormModal
+        title={`Edit — ${editingAccount.name}`}
+        submitLabel="Save Changes"
+        initial={editingAccount}
+        onClose={()=>setEditingAccount(null)}
+        onSubmit={(data)=>{setAccounts(prev=>prev.map(a=>a.id===editingAccount.id?{...data,id:editingAccount.id}:a));setEditingAccount(null);}}
+        onDelete={()=>{
+          if(window.confirm(`Delete ${editingAccount.name}? This cannot be undone.`)){
+            setAccounts(prev=>prev.filter(a=>a.id!==editingAccount.id));
+            setAnalysisMap(prev=>{const n={...prev};delete n[editingAccount.id];return n;});
+            setNewsMap(prev=>{const n={...prev};delete n[editingAccount.id];return n;});
+            setSelectedId(accounts.find(a=>a.id!==editingAccount.id)?.id);
+            setEditingAccount(null);
+          }
+        }}
+      />}
 
       {/* Header */}
       <header className="border-b border-zinc-900 px-8 py-5 flex items-center justify-between">
