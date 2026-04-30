@@ -108,7 +108,7 @@ const DEFAULT_ACCOUNTS = [
     relationship: { championStable: true, recentChanges: "Same VP Operations for 3 years. Strong relationship. New CFO Dietrich aligned to transformation agenda." },
     external: "Q3 2026 earnings beat — revenue up 8% YoY, raised full-year guidance to $19.30-$20.10 EPS. Network 2.0 delivering $1B+ in cost savings. Spinning off FedEx Freight by June 2026.",
     renewal: { probability: "high", contractType: "multi-year", autoRenew: true, competitiveExposure: "none", updatedAt: "2026-04-28" }
-,
+  },
   {
     id: 7,
     name: "Asana",
